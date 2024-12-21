@@ -8,3 +8,4 @@ Important concepts:
 5. Robots.txt
 6. TF-IDF
 7. Storage
+8. Normalizing links (Links don't lead to same location)
