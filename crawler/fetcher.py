@@ -17,7 +17,7 @@ class Fetcher:
         try:
             async with session.get(url, allow_redirects = True) as response: #gives instance of session
                 #if succesful connection and is website 
-                if response.status == 200 and "text/html" in response.headers.get("Content-Type", ""):
+                if response.status == 200 and ("text/html" in response.headers.get("Content-Type", "")):
                     return await response.text()
                 logging.warning(f"Skipping non-html or failed URL: {url}")
 

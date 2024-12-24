@@ -1,20 +1,21 @@
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 
-" Extracts links, titles, and other data from HTML content. "
+# Parser extracts information from the HTML doc 
 class Parser:
-
+    # Parse html content and parse all urls
     def parse(self, html, base_url):
-        " Parses HTML content and extracts the title and all hyperlinks. "
-        soup = BeautifulSoup(html, "html.parser")
-        title = soup.title.string if soup.title else "No Title"
+        soup = BeautifulSoup(html, "lxml")                      #object and type of parser we'll use
+        title = soup.title.string if soup.title else "No Title" #grab the title
         links = set()
 
-        # Extract and normalize links
-        for a_tag in soup.find_all("a", href=True):
-            link = urljoin(base_url, a_tag["href"])  # Resolve relative URLs
+        #extra links and normalize them
+        for anchor in soup.find_all('a', href = True):
+            link = urljoin(base_url, anchor["href"])  # Combine base with relative url
             parsed_url = urlparse(link)
             normalized_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path.rstrip('/')}"
             links.add(normalized_url)
 
         return title, links
+
+
