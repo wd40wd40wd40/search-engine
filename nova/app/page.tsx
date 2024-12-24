@@ -102,8 +102,8 @@ export default function Home() {
         >
           <div className='container mx-auto px-4'>
             {!hasSearched ? (
-              <div className='flex flex-col items-center py-16'>
-                <div className='w-80 h-20 relative mb-8'>
+              <div className='flex flex-col items-center space-y-8 py-16'>
+                <div className='w-80 h-20 relative'>
                   <Image
                     src={
                       theme === "light"
@@ -117,7 +117,7 @@ export default function Home() {
                   />
                 </div>
                 <div className='w-full max-w-5xl flex flex-col'>
-                  <form onSubmit={handleSearch}>
+                  <form onSubmit={handleSearch} className='space-y-8'>
                     <div className='flex flex-row justify-center space-x-10'>
                       <div className='relative w-1/2'>
                         <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4' />
@@ -142,7 +142,7 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className='flex flex-row justify-center w-full max-w-xs space-x-10 mx-auto mt-8'>
+                    <div className='flex flex-row justify-center w-full max-w-xs space-x-10 mx-auto'>
                       <Button variant='outline' type='submit' className='w-1/2'>
                         Search
                       </Button>
