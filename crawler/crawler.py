@@ -29,28 +29,25 @@ class Crawler:
         # Cache of domain -> set of disallowed paths
         self.domain_to_disallowed = {}
 
-    def _get_domain(self, url):
-        """
-        Parses the URL and returns scheme://netloc
-        so we can look up the correct robots.txt entry.
-        """
+    " Parses the URL and returns scheme://netloc so we can look up the correct robots.txt entry. "
+    #basically gets the main domain of a website
+    #used for robots.txt in case we move to new domain and need to redo robots
+    def get_mainAddress(self, url):
         parsed = urlparse(url)
         return f"{parsed.scheme}://{parsed.netloc}"
 
+    " Starts the crawling process and orchestrates fetching and parsing. "
     async def crawl(self):
-        """
-        Starts the crawling process and orchestrates fetching and parsing.
-        """
         async with self.fetcher.create_session() as session:
             # Main crawling loop
             while self.queue_URLS_to_Visit and (len(self.visited) < self.max_pages):
                 url, depth = self.queue_URLS_to_Visit.pop(0)
 
-                # Skip if we already visited
+                # Skip if we already visited url
                 if url in self.visited:
                     continue
 
-                domain = self._get_domain(url)
+                domain = self.get_mainAddress(url)
 
                 # Check if we have robots data for this domain
                 if domain not in self.domain_to_disallowed:
@@ -59,6 +56,8 @@ class Crawler:
                     self.domain_to_disallowed[domain] = disallowed_paths
 
                 # If this URL is disallowed, skip
+                #look at this line again and understand
+                #basically if any part of url restricted it evals to true means wrong path
                 disallowed = any(url.startswith(path) for path in self.domain_to_disallowed[domain])
                 if disallowed:
                     continue
@@ -68,7 +67,7 @@ class Crawler:
                 if html:
                     # Parse the page for title and links
                     title, links = self.parser.parse(html, url)
-                    print(f"Visited: {url}, Title: {title}")
+                    #print(f"Visited: {url}, Title: {title}")
 
                     # Mark visited
                     self.visited.add(url)
@@ -78,3 +77,5 @@ class Crawler:
                         for link in links:
                             if link not in self.visited:
                                 self.queue_URLS_to_Visit.append((link, depth + 1))
+                else:
+                    print("Something went wrong; Hit the else at end of crawler")
