@@ -23,6 +23,7 @@ class Crawler:
     async def crawl(self):
         " Starts the crawling process and orchestrates fetching and parsing. "
         async with self.fetcher.create_session() as session:
+            
             # Parse robots.txt for disallowed paths
             disallowed_paths = await self.robots_handler.get_disallowed_paths(session, self.start_url)
 
