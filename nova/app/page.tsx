@@ -102,7 +102,7 @@ export default function Home() {
         >
           <div className='container mx-auto px-4'>
             {!hasSearched ? (
-              <div className='flex flex-col items-center space-y-8 py-16'>
+              <div className='flex flex-col items-center space-y-10 py-16'>
                 <div className='w-80 h-20 relative'>
                   <Image
                     src={
