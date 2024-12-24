@@ -79,9 +79,14 @@ export default function Home() {
   }
 
   return (
-    <div className={`min-h-screen bg-cover bg-center transition-all duration-700 ${
-      currentGradient >= 0 && customModeEnabled && !hasSearched ? gradients[currentGradient] : 'bg-background'
-    }`}>
+    <div 
+      className={`min-h-screen bg-cover bg-center transition-all duration-700`}
+      style={{
+        backgroundImage: currentGradient >= 0 && customModeEnabled && !hasSearched 
+          ? `url(/images/gradient-${currentGradient + 1}.png)` 
+          : 'none'
+      }}
+    >
       <div className={`min-h-screen backdrop-blur-[2px] flex flex-col transition-all duration-500 ${
         customizeOpen ? 'mr-[250px]' : ''
       }`}>
@@ -117,7 +122,7 @@ export default function Home() {
                 </div>
               </div>
             ) : (
-              <div className="py-4 pl-4">
+              <div className="py-4 pl-0.5">
                 <div className="flex items-center gap-4">
                   <button onClick={resetSearch} className="h-12 relative shrink-0">
                     <Image
