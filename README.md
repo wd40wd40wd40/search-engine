@@ -9,3 +9,10 @@ Important concepts:
 6. TF-IDF
 7. Storage
 8. Normalizing links (Links don't lead to same location)
+
+
+
+FUTURE Improvements:
+    Crawler:
+        1. Add a database to store previously crawled data with a time of crawl attached. Can then set condition to recrawl
+            after set amount of time or manual update.

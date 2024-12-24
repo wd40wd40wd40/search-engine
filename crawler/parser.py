@@ -5,7 +5,7 @@ from urllib.parse import urljoin, urlparse
 class Parser:
     # Parse html content and parse all urls
     def parse(self, html, base_url):
-        soup = BeautifulSoup(html, "lxml")                      #object and type of parser we'll use
+        soup = BeautifulSoup(html, "lxml") #object and type of parser we'll use
         title = soup.title.string if soup.title else "No Title" #grab the title
         links = set()
 
