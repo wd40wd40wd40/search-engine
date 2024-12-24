@@ -3,40 +3,19 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-class Fetcher:
-    """
-    Handles HTTP requests and manages connections using aiohttp.
-    """
+" Handles HTTP requests and manages connections using aiohttp. "
+class Fetcher:  
 
     def __init__(self, timeout=10):
-        """
-        Initializes the fetcher with a default timeout.
-        
-        Args:
-            timeout (int): Timeout in seconds for HTTP requests.
-        """
+        "Initializes the fetcher with a default timeout."
         self.timeout = aiohttp.ClientTimeout(total=timeout)
 
     async def create_session(self):
-        """
-        Creates an aiohttp session with custom configurations.
-        
-        Returns:
-            aiohttp.ClientSession: An aiohttp session object.
-        """
+        " Creates an aiohttp session with custom configurations. "
         return aiohttp.ClientSession(timeout=self.timeout)
 
     async def fetch(self, session, url):
-        """
-        Fetches the content of a URL.
-        
-        Args:
-            session (aiohttp.ClientSession): The session object for making requests.
-            url (str): The URL to fetch.
-        
-        Returns:
-            str: The HTML content of the page or None if an error occurred.
-        """
+        " Fetches the content of a URL. "
         try:
             async with session.get(url, allow_redirects=True) as response:
                 if response.status == 200 and "text/html" in response.headers.get("Content-Type", ""):
