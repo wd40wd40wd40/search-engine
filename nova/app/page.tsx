@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { UserCircle, Paintbrush } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Search } from "lucide-react";
@@ -10,6 +11,7 @@ import { Globe } from "lucide-react";
 import Image from "next/image";
 import { CustomizeSidebar } from "@/components/customize-sidebar";
 import { SearchResults } from "@/components/search-results";
+import { Toaster } from "@/components/ui/toaster";
 
 const gradients = [
   "/images/Gradient-1.png",
@@ -29,6 +31,8 @@ export default function Home() {
   const [hasSearched, setHasSearched] = useState(false);
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
+  const { toast } = useToast();
 
   useEffect(() => {
     setMounted(true);
@@ -57,6 +61,26 @@ export default function Home() {
     if (searchQuery.trim() && sourceURL.trim()) {
       setSearchedQuery(searchQuery);
       setHasSearched(true);
+    } else if (sourceURL.trim()) {
+      //no search query
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Search is empty.",
+      });
+    } else if (searchQuery.trim()) {
+      //no sourceURL
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "No Source URL provided.",
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "No Search or Source URL provided.",
+      });
     }
   };
 
@@ -226,6 +250,7 @@ export default function Home() {
           onCustomModeChange={handleCustomModeChange}
         />
       </div>
+      <Toaster />
     </div>
   );
 }
