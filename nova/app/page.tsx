@@ -54,7 +54,7 @@ export default function Home() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
+    if (searchQuery.trim() && sourceURL.trim()) {
       setSearchedQuery(searchQuery);
       setHasSearched(true);
     }
@@ -76,6 +76,7 @@ export default function Home() {
   const resetSearch = () => {
     setSearchQuery("");
     setSearchedQuery("");
+    setSourceURL("");
     setHasSearched(false);
   };
 
@@ -115,7 +116,7 @@ export default function Home() {
                     priority
                   />
                 </div>
-                <div className='w-full max-w-5xl'>
+                <div className='w-full max-w-5xl flex flex-col'>
                   <form onSubmit={handleSearch}>
                     <div className='flex flex-row justify-center space-x-10'>
                       <div className='relative w-1/2'>
@@ -128,6 +129,7 @@ export default function Home() {
                           className='pl-10 pr-4 py-6 rounded-full bg-background/80 placeholder:text-muted-foreground'
                         />
                       </div>
+
                       <div className='relative w-1/2'>
                         <Globe className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4' />
                         <Input
@@ -140,6 +142,11 @@ export default function Home() {
                       </div>
                     </div>
                   </form>
+                </div>
+
+                <div className='flex flex-row justify-center space-x-10 mt-8'>
+                  <Button>Search</Button>
+                  <Button>Feeling Lucky?</Button>
                 </div>
               </div>
             ) : (
