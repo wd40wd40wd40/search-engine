@@ -15,13 +15,15 @@ class Crawler:
         self.max_depth = max_depth
         self.visited = set()  # Set of visited URLs
         self.queue = [(start_url, 0)]  # Queue for BFS with (url, depth)
-        self.fetcher = Fetcher()
-        self.parser = Parser()
-        self.robots_handler = RobotsHandler()
+
+        self.fetcher = Fetcher() # handles fetching HTML content of web pages, including handling timeouts, redirects, and errors
+        self.parser = Parser() # extracts the title and hyperlinks from the fetched HTML content and normalizes URLs
+        self.robots_handler = RobotsHandler() # parses and enforces rules from the robots.txt file to respect crawling restrictions
 
     async def crawl(self):
         " Starts the crawling process and orchestrates fetching and parsing. "
         async with self.fetcher.create_session() as session:
+            
             # Parse robots.txt for disallowed paths
             disallowed_paths = await self.robots_handler.get_disallowed_paths(session, self.start_url)
 

@@ -12,7 +12,7 @@ class Fetcher:
 
     async def create_session(self):
         " Creates an aiohttp session with custom configurations. "
-        return aiohttp.ClientSession(timeout=self.timeout)
+        return aiohttp.ClientSession(timeout=self.timeout) # Manager to handle mutliple https requests
 
     async def fetch(self, session, url):
         " Fetches the content of a URL. "
