@@ -141,16 +141,16 @@ export default function Home() {
                         />
                       </div>
                     </div>
-                  </form>
-                </div>
 
-                <div className='flex flex-row justify-center w-full max-w-xs space-x-10 mt-8'>
-                  <Button variant='outline' className='w-1/2'>
-                    Search
-                  </Button>
-                  <Button variant='outline' className='w-1/2'>
-                    Feeling Lucky?
-                  </Button>
+                    <div className='flex flex-row justify-center w-full max-w-xs space-x-10 mx-auto mt-8'>
+                      <Button variant='outline' type='submit' className='w-1/2'>
+                        Search
+                      </Button>
+                      <Button variant='outline' className='w-1/2'>
+                        Feeling Lucky?
+                      </Button>
+                    </div>
+                  </form>
                 </div>
               </div>
             ) : (
