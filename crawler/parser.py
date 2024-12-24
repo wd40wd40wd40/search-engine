@@ -2,21 +2,10 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 
 class Parser:
-    """
-    Extracts links, titles, and other data from HTML content.
-    """
+    " Extracts links, titles, and other data from HTML content. "
 
     def parse(self, html, base_url):
-        """
-        Parses HTML content and extracts the title and all hyperlinks.
-        
-        Args:
-            html (str): The HTML content of the page.
-            base_url (str): The base URL of the page for resolving relative links.
-        
-        Returns:
-            tuple: A tuple containing the page title (str) and a set of links (set).
-        """
+        " Parses HTML content and extracts the title and all hyperlinks. "
         soup = BeautifulSoup(html, "html.parser")
         title = soup.title.string if soup.title else "No Title"
         links = set()
