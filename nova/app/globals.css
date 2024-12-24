@@ -69,21 +69,10 @@
  
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border transition-colors duration-700;
   }
   body {
     @apply bg-background text-foreground;
   }
-}
-
-@layer utilities {
-  .min-h-screen {
-    min-height: 100vh;
-    min-height: 100dvh;
-  }
-}
-
-.rounded-full {
-  border-radius: 9999px;
 }
 
