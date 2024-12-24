@@ -1,19 +1,47 @@
-# crawler/fetcher.py
+import aiohttp
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 class Fetcher:
-    async def fetch(self, url):
-        """
-        Fetch a page:
-        - Make an HTTP request to the URL
-        - Extract links from the response content
-        - Return (content, links)
-        """
-        pass
+    """
+    Handles HTTP requests and manages connections using aiohttp.
+    """
 
-    def extract_links(self, base_url, html):
+    def __init__(self, timeout=10):
         """
-        Extract all links from the given HTML:
-        - Parse HTML with a library like BeautifulSoup
-        - Resolve relative URLs to absolute URLs
+        Initializes the fetcher with a default timeout.
+        
+        Args:
+            timeout (int): Timeout in seconds for HTTP requests.
         """
-        pass
+        self.timeout = aiohttp.ClientTimeout(total=timeout)
+
+    async def create_session(self):
+        """
+        Creates an aiohttp session with custom configurations.
+        
+        Returns:
+            aiohttp.ClientSession: An aiohttp session object.
+        """
+        return aiohttp.ClientSession(timeout=self.timeout)
+
+    async def fetch(self, session, url):
+        """
+        Fetches the content of a URL.
+        
+        Args:
+            session (aiohttp.ClientSession): The session object for making requests.
+            url (str): The URL to fetch.
+        
+        Returns:
+            str: The HTML content of the page or None if an error occurred.
+        """
+        try:
+            async with session.get(url, allow_redirects=True) as response:
+                if response.status == 200 and "text/html" in response.headers.get("Content-Type", ""):
+                    return await response.text()
+                logging.warning(f"Skipping non-HTML or failed URL: {url}")
+        except Exception as e:
+            logging.error(f"Error fetching {url}: {e}")
+        return None

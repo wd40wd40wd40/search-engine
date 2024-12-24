@@ -1,16 +1,32 @@
-# crawler/robots.py
+import aiohttp
+from urllib.parse import urljoin
 
-class RobotsChecker:
-    def __init__(self):
-        """
-        Initialize a cache for robots.txt rules
-        """
-        pass
+class RobotsHandler:
+    """
+    Handles parsing and applying rules from robots.txt.
+    """
 
-    async def is_allowed(self, url):
+    async def get_disallowed_paths(self, session, base_url):
         """
-        Check if a URL is allowed to be crawled:
-        - Fetch and parse robots.txt if not cached
-        - Check the rules for disallowed paths
+        Fetches and parses robots.txt for disallowed paths.
+        
+        Args:
+            session (aiohttp.ClientSession): The session object for HTTP requests.
+            base_url (str): The base URL of the website.
+        
+        Returns:
+            set: A set of disallowed paths extracted from robots.txt.
         """
-        pass
+        disallowed = set()
+        robots_url = urljoin(base_url, "/robots.txt")  # Construct the robots.txt URL
+        try:
+            async with session.get(robots_url) as response:
+                if response.status == 200:
+                    for line in (await response.text()).splitlines():
+                        line = line.strip()
+                        if line.lower().startswith("disallow:"):
+                            path = line.split(":", 1)[1].strip()
+                            disallowed.add(urljoin(base_url, path))
+        except Exception:
+            pass  # Robots.txt is optional and failures are non-critical
+        return disallowed
