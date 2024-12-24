@@ -1,74 +1,58 @@
 import asyncio
-import aiohttp
-from bs4 import BeautifulSoup
-from urllib.parse import urljoin, urlparse
-from collections import deque
+from crawler.fetcher import Fetcher
+from crawler.parser import Parser
+from crawler.robots import RobotsHandler
 
 
 class Crawler:
-    def __init__(self, start_url, max_pages=50):
+    """
+    Main crawler class that orchestrates fetching, parsing, and adhering to robots.txt rules.
+    """
+
+    def __init__(self, start_url, max_pages=50, max_depth=3):
+        """
+        Initializes the crawler with a starting URL and crawling parameters.
+        
+        Args:
+            start_url (str): The URL to start crawling from.
+            max_pages (int): Maximum number of pages to crawl.
+            max_depth (int): Maximum depth to crawl.
+        """
         self.start_url = start_url
         self.max_pages = max_pages
-        self.visited = set()
-        self.queue = deque([start_url])
-
-    async def fetch_and_process(self, session, url):
-        """Fetch and process a single URL."""
-        try:
-            async with session.get(url, timeout=aiohttp.ClientTimeout(total=10)) as response:
-                if response.status != 200:
-                    print(f"Failed to fetch {url}: HTTP {response.status}")
-                    return
-
-                html = await response.text()
-
-                # Parse the page
-                soup = BeautifulSoup(html, 'html.parser')
-
-                # Print the current URL and its title
-                print(f"Crawling: {url}")
-                print(f"Title: {soup.title.string if soup.title else 'No Title'}\n")
-
-                # Add the URL to the visited set
-                self.visited.add(url)
-
-                # Find and normalize all links
-                for link in soup.find_all('a', href=True):
-                    full_url = urljoin(url, link['href'])
-                    parsed_url = urlparse(full_url)
-                    normalized_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
-
-                    # Add only unvisited and unique URLs to the queue
-                    if (
-                        normalized_url not in self.visited and
-                        normalized_url not in self.queue and
-                        parsed_url.netloc
-                    ):
-                        self.queue.append(normalized_url)
-
-        except aiohttp.ClientConnectorError as e:
-            print(f"Network error while fetching {url}: {e}")
-        except aiohttp.ClientResponseError as e:
-            print(f"HTTP error for {url}: {e.status} {e.message}")
-        except asyncio.TimeoutError:
-            print(f"Timeout while fetching {url}")
-        except Exception as e:
-            print(f"Unexpected error for {url}: {e}")
+        self.max_depth = max_depth
+        self.visited = set()  # Set of visited URLs
+        self.queue = [(start_url, 0)]  # Queue for BFS with (url, depth)
+        self.fetcher = Fetcher()
+        self.parser = Parser()
+        self.robots_handler = RobotsHandler()
 
     async def crawl(self):
-        print(f"Starting crawl at: {self.start_url}\n")
+        """
+        Starts the crawling process and orchestrates fetching and parsing.
+        """
+        async with self.fetcher.create_session() as session:
+            # Parse robots.txt for disallowed paths
+            disallowed_paths = await self.robots_handler.get_disallowed_paths(session, self.start_url)
 
-        async with aiohttp.ClientSession() as session:
+            # Main crawling loop
             while self.queue and len(self.visited) < self.max_pages:
-                url = self.queue.popleft()
+                url, depth = self.queue.pop(0)
 
-                if url not in self.visited:
-                    await self.fetch_and_process(session, url)
+                # Skip already visited URLs or disallowed paths
+                if url in self.visited or any(url.startswith(path) for path in disallowed_paths):
+                    continue
 
+                # Fetch the HTML content of the page
+                html = await self.fetcher.fetch(session, url)
+                if html:
+                    # Parse the page for title and links
+                    title, links = self.parser.parse(html, url)
+                    print(f"Visited: {url}, Title: {title}")
 
-if __name__ == "__main__":
-    start_url = "https://example.com"  # Replace with the starting URL
-    max_pages = 50
-
-    crawler = Crawler(start_url, max_pages)
-    asyncio.run(crawler.crawl())
+                    # Mark as visited and add new links to the queue
+                    self.visited.add(url)
+                    if depth < self.max_depth:
+                        for link in links:
+                            if link not in self.visited:
+                                self.queue.append((link, depth + 1))
