@@ -3,12 +3,11 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-class Fetcher:
-    " Handles HTTP requests and manages connections using aiohttp. "
+" Handles HTTP requests and manages connections using aiohttp. "
+class Fetcher:  
 
     def __init__(self, timeout=10):
         "Initializes the fetcher with a default timeout."
-
         self.timeout = aiohttp.ClientTimeout(total=timeout)
 
     async def create_session(self):

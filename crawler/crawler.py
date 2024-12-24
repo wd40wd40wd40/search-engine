@@ -4,20 +4,12 @@ from crawler.parser import Parser
 from crawler.robots import RobotsHandler
 
 
+" Main crawler class that orchestrates fetching, parsing, and adhering to robots.txt rules. "
 class Crawler:
-    """
-    Main crawler class that orchestrates fetching, parsing, and adhering to robots.txt rules.
-    """
+    
 
     def __init__(self, start_url, max_pages=50, max_depth=3):
-        """
-        Initializes the crawler with a starting URL and crawling parameters.
-        
-        Args:
-            start_url (str): The URL to start crawling from.
-            max_pages (int): Maximum number of pages to crawl.
-            max_depth (int): Maximum depth to crawl.
-        """
+        " Initializes the crawler with a starting URL and crawling parameters. "
         self.start_url = start_url
         self.max_pages = max_pages
         self.max_depth = max_depth
@@ -28,9 +20,7 @@ class Crawler:
         self.robots_handler = RobotsHandler()
 
     async def crawl(self):
-        """
-        Starts the crawling process and orchestrates fetching and parsing.
-        """
+        " Starts the crawling process and orchestrates fetching and parsing. "
         async with self.fetcher.create_session() as session:
             # Parse robots.txt for disallowed paths
             disallowed_paths = await self.robots_handler.get_disallowed_paths(session, self.start_url)

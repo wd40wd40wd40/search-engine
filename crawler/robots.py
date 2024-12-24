@@ -1,8 +1,9 @@
 import aiohttp
 from urllib.parse import urljoin
 
+" Handles parsing and applying rules from robots.txt. "
 class RobotsHandler:
-    " Handles parsing and applying rules from robots.txt. "
+    
 
     async def get_disallowed_paths(self, session, base_url):
         " Fetches and parses robots.txt for disallowed paths. "

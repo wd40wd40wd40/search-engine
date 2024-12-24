@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 
+" Extracts links, titles, and other data from HTML content. "
 class Parser:
-    " Extracts links, titles, and other data from HTML content. "
 
     def parse(self, html, base_url):
         " Parses HTML content and extracts the title and all hyperlinks. "
