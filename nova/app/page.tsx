@@ -115,7 +115,7 @@ export default function Home() {
                         placeholder="Search or type a URL"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10 pr-4 py-6 rounded-full bg-background/80 backdrop-blur-sm placeholder:text-muted-foreground"
+                        className="pl-10 pr-4 py-6 rounded-full bg-background/80 placeholder:text-muted-foreground"
                       />
                     </div>
                   </form>
@@ -146,7 +146,7 @@ export default function Home() {
                         placeholder="Search or type a URL"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10 pr-4 py-6 rounded-full bg-background/80 backdrop-blur-sm placeholder:text-muted-foreground"
+                        className="pl-10 pr-4 py-6 rounded-full bg-background/80 placeholder:text-muted-foreground"
                       />
                     </div>
                   </form>
