@@ -27,7 +27,7 @@ class Crawler:
             # Parse robots.txt for disallowed paths
             disallowed_paths = await self.robots_handler.get_disallowed_paths(session, self.start_url)
 
-            # Main crawling loop
+            # Main crawling loopwww
             while self.queue and len(self.visited) < self.max_pages:
                 url, depth = self.queue.pop(0)
 
