@@ -1,27 +1,26 @@
 import aiohttp
 import logging
 
+logging.basicConfig(level=logging.INFO)
 
-#Connect to HTML and manage https connections using aiohttp
-class Fetcher:
-    # instantiate
-    def __init__(self, timeout = 10):
-        self.timeout = aiohttp.ClientTimeout(total=timeout) # using a format aiohttp is expecting
+" Handles HTTP requests and manages connections using aiohttp. "
+class Fetcher:  
 
-    # create the manager to handle connection pooling
+    def __init__(self, timeout=10):
+        "Initializes the fetcher with a default timeout."
+        self.timeout = aiohttp.ClientTimeout(total=timeout)
+
     async def create_session(self):
-        return aiohttp.ClientSession(timeout = self.timeout)
-    
-    # Get the content of the url 
-    async def fetch(self, session, url): # reuse the session manager to save on efficiency with 'session' as parameter (not opening and closing inside fetch)
-        try:
-            async with session.get(url, allow_redirects = True) as response: #gives instance of session
-                #if succesful connection and is website 
-                if response.status == 200 and ("text/html" in response.headers.get("Content-Type", "")):
-                    return await response.text()
-                logging.warning(f"Skipping non-html or failed URL: {url}")
+        " Creates an aiohttp session with custom configurations. "
+        return aiohttp.ClientSession()
 
+    async def fetch(self, session, url):
+        try:
+            async with session.get(url) as response:
+                if 'text/html' in response.headers.get('Content-Type', ''):
+                    return await response.text()
+                else:
+                    return None  # Skip non-HTML content
         except Exception as e:
-            logging.error(f"Error fetching {url}: {e}")
-        return None
-    
+            print(f"Error fetching {url}: {e}")
+            return None
