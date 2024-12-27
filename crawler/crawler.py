@@ -1,4 +1,5 @@
 import asyncio
+from urllib.parse import urlparse
 from crawler.fetcher import Fetcher
 from crawler.parser import Parser
 from crawler.robots import RobotsHandler
@@ -20,27 +21,46 @@ class Crawler:
         self.fetcher = Fetcher() # handles fetching HTML content of web pages, including handling timeouts, redirects, and errors
         self.parser = Parser() # extracts the title and hyperlinks from the fetched HTML content and normalizes URLs
         self.robots_handler = RobotsHandler() # parses and enforces rules from the robots.txt file to respect crawling restrictions
+        self.robots_domains = {} # Keep the unique domain names in case we move to different site and need to update
 
     async def crawl(self):
         " Starts the crawling process and orchestrates fetching and parsing. "
         async with aiohttp.ClientSession() as session:
-            # Parse robots.txt for disallowed paths
-            disallowed_paths = await self.robots_handler.get_disallowed_paths(session, self.start_url)
-
-            # Main crawling loopwww
+            
+            # Main crawling loop
             while self.queue and len(self.visited) < self.max_pages:
                 url, depth = self.queue.pop(0)
 
                 # Skip already visited URLs or disallowed paths
-                if url in self.visited or any(url.startswith(path) for path in disallowed_paths):
+                if url in self.visited:
                     continue
+
+                "ROBOTS SETUP"
+                # Get domain for robots
+                parsedUrl = urlparse(url)
+                currDomain = f"{parsedUrl.scheme}://{parsedUrl.netloc}"
+
+                #if new domain encountered then add it to known domains for robots
+                if currDomain not in self.robots_domains:
+                    try:
+                        self.robots_domains[currDomain] = await self.robots_handler.get_disallowed_paths(session, currDomain)
+                    except Exception as e:
+                        print(f"Error fetching robots.txt for {currDomain}: {e}")
+                        disallowedPaths = []  # Default to no disallowed paths if fetch fails
+                
+                #Get curr robot domain rules
+                disallowedPaths = self.robots_domains[currDomain]
+
+                # Skip URLs disallowed by robots.txt
+                if any(url.startswith(currDomain + path) for path in disallowedPaths):
+                    continue
+
 
                 # Fetch the HTML content of the page
                 html = await self.fetcher.fetch(session, url)
                 if html:
                     # Parse the page for title and links
                     title, links = self.parser.parse(html, url)
-                    print(f"Visited: {url}, Title: {title}")
 
                     # Mark as visited and add new links to the queue
                     self.visited.add(url)
