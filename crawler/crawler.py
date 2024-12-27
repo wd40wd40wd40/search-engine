@@ -10,7 +10,7 @@ import aiohttp
 class Crawler:
     
 
-    def __init__(self, start_url, max_pages=10, max_depth=3):
+    def __init__(self, start_url, max_pages=50, max_depth=3):
         " Initializes the crawler with a starting URL and crawling parameters. "
         self.start_url = start_url
         self.max_pages = max_pages

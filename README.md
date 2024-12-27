@@ -43,3 +43,14 @@ CURRENT PROJECT TRACK:
     2. Setup search and crawling for user input and press ✅
     3. Test it 
     4. Connect it to backend
+
+
+Design Choices:
+    1. Break up core logic into 3 main parts: crawling, reverse indexing, and ranking.
+    2. Dynamic robots.txt domain fetching in case we end off original website
+    3. Modularity in our code to make choices plug and play for easier/quicker debugging and testing
+    4. Make reverse indexing after crawling for scalability.
+        a. Crawling and indexing are different processes making easier to debug
+        b. Flexibility to not have to recrawl data to reverse index
+        c. Decoupling the work so it can be worked on by more than one system at a time and adequate resources
+            can be provided on a need basis to avoid bottlenecks.
