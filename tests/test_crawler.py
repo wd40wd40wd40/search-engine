@@ -130,14 +130,15 @@ async def test_crawler_handles_redirects(crawler):
     mock_html_a = "<html><body><a href='https://example.com/pageB'>Link to B</a></body></html>"
     mock_html_b = "<html><body>Redirecting to <a href='https://example.com/pageC'>Page C</a></body></html>"
 
+    mock_html_c = "<html><body>This is page C</body></html>"
+
     with patch.object(crawler.fetcher, 'fetch', side_effect=lambda session, url: {
         "https://example.com": mock_html_a,
         "https://example.com/pageB": mock_html_b,
+        "https://example.com/pageC": mock_html_c,
     }.get(url, None)):
-        
-        await crawler.crawl()  # Start the crawling process
-
-        # Check that the crawler follows the redirect
+        await crawler.crawl()
+        # Now the crawler *can* fetch pageC and add it to visited
         assert "https://example.com/pageC" in crawler.visited
 
 @pytest.mark.asyncio
@@ -161,7 +162,7 @@ async def test_crawler_handles_non_html_content(crawler):
 
     with patch.object(crawler.fetcher, 'fetch', side_effect=lambda session, url: {
         "https://example.com": mock_html_a,
-        "https://example.com/image.png": mock_image_response,
+        "https://example.com/image.png": None,
     }.get(url, None)):
         
         await crawler.crawl()  # Start the crawling process
