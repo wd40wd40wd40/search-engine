@@ -17,6 +17,8 @@ import { Globe } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 
+import { HeroLogo } from "@/components/HeroLogo";
+
 const gradients = [
   "/images/Gradient-1.png",
   "/images/Gradient-2.png",
@@ -131,19 +133,7 @@ export default function Home() {
           <div className='container mx-auto px-4'>
             {!hasSearched ? (
               <div className='flex flex-col items-center space-y-10 py-16'>
-                <div className='w-80 h-20 relative'>
-                  <Image
-                    src={
-                      theme === "light"
-                        ? "/images/NOVA-Logo-Black-Big.png"
-                        : "/images/NOVA-Logo-White-Big.png"
-                    }
-                    alt='Nova'
-                    fill
-                    className='object-contain transition-opacity duration-700'
-                    priority
-                  />
-                </div>
+                <HeroLogo />
                 <div className='w-full max-w-5xl flex flex-col'>
                   <form onSubmit={handleSearch} className='space-y-8'>
                     <div className='flex flex-row justify-center space-x-10'>
