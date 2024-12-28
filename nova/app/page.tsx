@@ -1,17 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { UserCircle, Paintbrush } from "lucide-react";
-import { useTheme } from "next-themes";
-import { Search } from "lucide-react";
-import { Globe } from "lucide-react";
-import Image from "next/image";
 import { CustomizeSidebar } from "@/components/customize-sidebar";
 import { SearchResults } from "@/components/search-results";
 import { Toaster } from "@/components/ui/toaster";
+
+import { useToast } from "@/hooks/use-toast";
+
+import { UserCircle, Paintbrush } from "lucide-react";
+import { Search } from "lucide-react";
+import { Globe } from "lucide-react";
+
+import { useTheme } from "next-themes";
+import Image from "next/image";
 
 const gradients = [
   "/images/Gradient-1.png",
