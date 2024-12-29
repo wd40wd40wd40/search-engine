@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,6 @@ import { useToast } from "@/hooks/use-toast";
 
 import { UserCircle, Paintbrush } from "lucide-react";
 import { Search } from "lucide-react";
-import { Globe } from "lucide-react";
 
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -41,6 +41,8 @@ export default function Home() {
 
   const { toast } = useToast();
 
+  const router = useRouter();
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -67,7 +69,8 @@ export default function Home() {
     e.preventDefault();
     if (searchQuery.trim() && sourceURL.trim()) {
       setSearchedQuery(searchQuery);
-      setHasSearched(true);
+      //setHasSearched(true);
+      router.push("/results");
     } else if (sourceURL.trim()) {
       //no search query
       toast({
