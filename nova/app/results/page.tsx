@@ -86,7 +86,7 @@ export default function ResultsPage() {
           customizeOpen ? "mr-[250px]" : ""
         }`}
       >
-        <div className="py-4 pl-0.5">
+        <div className="py-4 pl-5">
           <div className="flex items-center gap-4">
             <button onClick={resetSearch} className="h-12 relative shrink-0">
               <Image
