@@ -1,19 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import Image from "next/image";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { Search } from "lucide-react";
-import { SearchResults } from "@/components/search-results";
+import { UserCircle, Paintbrush } from "lucide-react";
 
+import { SearchResults } from "@/components/search-results";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { UserCircle, Paintbrush } from "lucide-react";
 import { CustomizeSidebar } from "@/components/customize-sidebar";
 import { Toaster } from "@/components/ui/toaster";
-import { useSearchParams } from "next/navigation";
 
 export default function ResultsPage() {
   const searchParams = useSearchParams();
