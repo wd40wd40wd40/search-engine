@@ -32,11 +32,7 @@ export default function ResultsPage() {
   const router = useRouter();
 
   const resetSearch = () => {
-    // setSearchQuery("");
-    // setSearchedQuery("");
-    // setSourceURL("");
-    // setHasSearched(false);
-    console.log("Hello");
+    router.push("/");
   };
 
   useEffect(() => {
