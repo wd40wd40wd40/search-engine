@@ -9,6 +9,7 @@ Important concepts:
 6. TF-IDF
 7. Storage
 8. Normalizing links (Links don't lead to same location)
+9. Stopword elimination
 
 
 
@@ -24,8 +25,15 @@ POTENTIAL ISSUES:
     Crawler:
         1. The way we store crawled links is through the set in an object. This isn't very scalable and we might overflow. Not sure where
             but there will be a limit. Consider switching to some sort of storage system.
+        2. Not using "title" when returning when parsing in crawler for both parser.py and crawler.py. If we end up not using this
+            remove it for performance.
+
     Overall:
         1. Cleanup the organization of the project, looks disgusting.
+
+    Indexer:
+        1. Consider using spaCy instead of NLTK for lemmatization
+
 
 
 CURRENT PROJECT TRACK:
@@ -54,3 +62,6 @@ Design Choices:
         b. Flexibility to not have to recrawl data to reverse index
         c. Decoupling the work so it can be worked on by more than one system at a time and adequate resources
             can be provided on a need basis to avoid bottlenecks.
+    5. Crawler only keeps the urls and not the content for indexer to then go over. Results in fetching 2x for everything,
+        but maintains freshness since indexing operates on its own. Also, substantially less storage consumption. We're broke students, we
+        can't fund that currently.

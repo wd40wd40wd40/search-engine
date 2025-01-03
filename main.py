@@ -1,29 +1,36 @@
-# main.py
-
-# Step 1: Import necessary modules
-# Import NLTK setup
-# Import Crawler, Indexer, Ranker
+import asyncio
+from crawler.crawler import Crawler
 
 async def main():
-    # Step 2: Set up NLTK resources
-    # Run setup_nltk()
+    # 1) Define your starting URL
+    start_url = "https://en.wikipedia.org/wiki/Gokor"
 
-    # Step 3: Define seed URLs
-    # Initialize crawler with seed URLs
+    # 2) Configure how many pages and the depth you want to crawl
+    max_pages = 1000
+    max_depth = 3
 
-    # Step 4: Initialize indexer and ranker
-    # Create Indexer and Ranker instances
+    # 3) Create the crawler instance
+    crawler = Crawler(start_url, max_pages, max_depth)
 
-    # Step 5: Crawl and index content
-    # For each URL fetched by the crawler:
-    #   - Send the content to the indexer for processing
+    # 4) Start the crawl (this fetches pages, parses them, and indexes the text)
+    await crawler.crawl()
 
-    # Step 6: Finalize index
-    # Call finalize() on the indexer to compute TF-IDF
+    # 5) After crawling, the index has been finalized. Retrieve it from storage:
+    index_data = crawler.indexer.storage.get_index()
 
-    # Step 7: Perform search queries
-    # Use the ranker to search for a query and display results
+    # 6) Print a summary
+    print(f"\nCrawled {len(crawler.visited)} pages.")
+    print(f"Indexed {len(index_data)} unique tokens.\n")
+
+    # 7) (Optional) Print postings for a sample token
+    sample_token = "example"  # or any other word you suspect is in the text
+    postings = index_data.get(sample_token, {})
+    if postings:
+        print(f"Documents containing the token '{sample_token}':")
+        for doc_id, tfidf_score in postings.items():
+            print(f"  {doc_id} -> TF-IDF: {tfidf_score}")
+    else:
+        print(f"No documents contain the token '{sample_token}'.")
 
 if __name__ == "__main__":
-    # Run the main coroutine
-    pass
+    asyncio.run(main())

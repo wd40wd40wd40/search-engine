@@ -1,30 +1,69 @@
-# indexer/indexer.py
+import math
+from collections import defaultdict
+
+from indexer.tokenizer import Tokenizer
+from indexer.storage import IndexStorage
 
 class Indexer:
+    """
+    Maintains a reverse index of term -> {doc_id: term_frequency} in memory,
+    computes TF-IDF upon finalization, and stores final scores in IndexStorage.
+    """
+
     def __init__(self):
-        """
-        Initialize a storage system for the reverse index
-        """
-        pass
+        self.tokenizer = Tokenizer()       # External library or custom tokenizer
+        self.storage = IndexStorage()      # Where we store final TF–IDF
 
-    def index_document(self, url, content):
-        """
-        Tokenize and index a document:
-        - Tokenize the content into words
-        - Add the tokens to the reverse index
-        """
-        pass
+        # In-memory raw frequency structures:
+        self.inverted_index = defaultdict(lambda: defaultdict(int))
+        self.doc_lengths = defaultdict(int)
+        self.document_count = 0
 
-    def finalize(self):
+    def add_document(self, document_id, text):
         """
-        Compute TF-IDF scores for all tokens:
-        - Calculate IDF for each term
-        - Compute the final TF-IDF score for each token-document pair
+        Tokenize 'text' and update raw term-frequency counts.
         """
-        pass
+        tokens = self.tokenizer.tokenize(text)
+        self.document_count += 1
 
-    def get_index(self):
+        freq_map = defaultdict(int)
+        for token in tokens:
+            freq_map[token] += 1
+
+        for term, count in freq_map.items():
+            self.inverted_index[term][document_id] += count
+
+        self.doc_lengths[document_id] = sum(freq_map.values())
+
+    def finalize_index(self):
         """
-        Return the reverse index
+        Convert raw frequencies into TF–IDF and store them in self.storage.
         """
-        pass
+        N = self.document_count
+
+        for term, doc_map in self.inverted_index.items():
+            # doc frequency (# docs containing 'term')
+            df = len(doc_map)
+
+            # IDF: log10( N / (df + 1) )  to avoid log of zero
+            # or if you prefer exact: log10(N / df) when df>0
+            if df > 0:
+                idf = math.log10(N / (df + 1))
+            else:
+                continue
+
+            # Update each doc's frequency -> TF–IDF
+            for doc_id, term_freq in doc_map.items():
+                tf = term_freq / self.doc_lengths[doc_id]
+                tf_idf = tf * idf
+
+                # Store in the final storage
+                self.storage.store_value(term, doc_id, tf_idf)
+
+        print("Index finalization complete. TF–IDF scores computed.")
+
+    def save(self, filepath):
+        """
+        Save the final TF–IDF index to disk (JSON).
+        """
+        self.storage.save_to_disk(filepath)
