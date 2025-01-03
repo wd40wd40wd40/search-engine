@@ -65,11 +65,6 @@ export default function Home() {
 
   if (!mounted) return null;
 
-  const logoSrc =
-    theme === "light"
-      ? "/images/NOVA-Logo-Black-Big.png"
-      : "/images/NOVA-Logo-White-Big.png";
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedSearch = searchQuery.trim();
@@ -117,13 +112,6 @@ export default function Home() {
     }
   };
 
-  const resetSearch = () => {
-    setSearchQuery("");
-    setSearchedQuery("");
-    setSourceURL("");
-    setHasSearched(false);
-  };
-
   return (
     <div
       className={`min-h-screen bg-cover bg-center transition-all duration-700`}
@@ -145,56 +133,20 @@ export default function Home() {
           }`}
         >
           <div className="container mx-auto px-4">
-            {!hasSearched ? (
-              <div className="flex flex-col items-center space-y-10 py-16">
-                <HeroLogo />
-                <div className="w-full max-w-5xl flex flex-col">
-                  <PrimarySearchForm
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
-                    sourceURL={sourceURL}
-                    setSourceURL={setSourceURL}
-                    handleSearch={handleSearch}
-                  />
-                </div>
+            <div className="flex flex-col items-center space-y-10 py-16">
+              <HeroLogo />
+              <div className="w-full max-w-5xl flex flex-col">
+                <PrimarySearchForm
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  sourceURL={sourceURL}
+                  setSourceURL={setSourceURL}
+                  handleSearch={handleSearch}
+                />
               </div>
-            ) : (
-              <div className="py-4 pl-0.5">
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={resetSearch}
-                    className="h-12 relative shrink-0"
-                  >
-                    <Image
-                      src={logoSrc}
-                      alt="Nova"
-                      width={96}
-                      height={48}
-                      className="object-contain transition-opacity duration-700"
-                      priority
-                    />
-                  </button>
-
-                  <form onSubmit={handleSearch} className="w-full max-w-2xl">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                      <Input
-                        type="text"
-                        placeholder="Search or type a URL"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10 pr-4 py-6 rounded-full bg-background/80 placeholder:text-muted-foreground"
-                      />
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         </div>
-
-        {hasSearched && <SearchResults query={searchedQuery} />}
-
         <div className="fixed top-4 right-4">
           <Button
             variant="ghost"
@@ -217,7 +169,6 @@ export default function Home() {
             <span className="sr-only">Customize</span>
           </Button>
         </div>
-
         <CustomizeSidebar
           open={customizeOpen}
           onOpenChange={setCustomizeOpen}
