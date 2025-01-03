@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CustomizeSidebar } from "@/components/customize-sidebar";
 import { Toaster } from "@/components/ui/toaster";
+import { ResultsHeroLogo } from "../ResultsHeroLogo";
 
 export default function ResultsPage() {
   const searchParams = useSearchParams(); // for extracting search and url from home page
@@ -26,7 +27,6 @@ export default function ResultsPage() {
   const [currentGradient, setCurrentGradient] = useState(-1);
   const [customModeEnabled, setCustomModeEnabled] = useState(false);
   const [customizeOpen, setCustomizeOpen] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const { theme } = useTheme();
@@ -85,21 +85,7 @@ export default function ResultsPage() {
       >
         <div className="py-4 pl-5">
           <div className="flex items-center gap-4">
-            <button onClick={resetSearch} className="h-12 relative shrink-0">
-              <Image
-                src={
-                  theme === "light"
-                    ? "/images/NOVA-Logo-Black-Big.png"
-                    : "/images/NOVA-Logo-White-Big.png"
-                }
-                alt="Nova"
-                width={96}
-                height={48}
-                className="object-contain transition-opacity duration-700"
-                priority
-              />
-            </button>
-
+            <ResultsHeroLogo resetSearch={resetSearch} />
             <form onSubmit={handleSearch} className="w-full max-w-2xl">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
