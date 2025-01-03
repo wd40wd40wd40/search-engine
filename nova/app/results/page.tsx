@@ -17,7 +17,7 @@ import { CustomizeSidebar } from "@/components/customize-sidebar";
 import { Toaster } from "@/components/ui/toaster";
 
 export default function ResultsPage() {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams(); // for extracting search and url from home page
 
   const searchedQuery = searchParams.get("searchedQuery") || "";
   const sourceURL = searchParams.get("sourceURL") || "";
@@ -28,6 +28,7 @@ export default function ResultsPage() {
   const [customizeOpen, setCustomizeOpen] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [mounted, setMounted] = useState(false);
+
   const { theme } = useTheme();
 
   const router = useRouter();
@@ -51,7 +52,6 @@ export default function ResultsPage() {
         sourceURL: sourceURL,
       }).toString();
       router.push(`/results?${query}`);
-      //setSearchedQuery(searchQuery);
     }
   };
 
@@ -73,7 +73,7 @@ export default function ResultsPage() {
       className={`min-h-screen bg-cover bg-center transition-all duration-700`}
       style={{
         backgroundImage:
-          currentGradient >= 0 && customModeEnabled && !hasSearched
+          currentGradient >= 0 && customModeEnabled
             ? `url(/images/gradient-${currentGradient + 1}.png)`
             : "none",
       }}
