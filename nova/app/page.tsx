@@ -69,8 +69,11 @@ export default function Home() {
     e.preventDefault();
     if (searchQuery.trim() && sourceURL.trim()) {
       setSearchedQuery(searchQuery);
-      //setHasSearched(true);
-      router.push("/results");
+      const query = new URLSearchParams({
+        searchedQuery,
+        sourceURL
+      }).toString();
+      router.push(`/results?${query}`);
     } else if (sourceURL.trim()) {
       //no search query
       toast({
