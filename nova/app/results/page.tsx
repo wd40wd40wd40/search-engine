@@ -1,101 +1,60 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { useTheme } from "next-themes";
+
+import { Search } from "lucide-react";
+import { SearchResults } from "@/components/search-results";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CustomizeSidebar } from "@/components/customize-sidebar";
-import { SearchResults } from "@/components/search-results";
-import { Toaster } from "@/components/ui/toaster";
-
-import { useToast } from "@/hooks/use-toast";
-
+import { useRouter } from "next/navigation";
 import { UserCircle, Paintbrush } from "lucide-react";
-import { Search } from "lucide-react";
+import { CustomizeSidebar } from "@/components/customize-sidebar";
+import { Toaster } from "@/components/ui/toaster";
+import { useSearchParams } from "next/navigation";
 
-import { useTheme } from "next-themes";
-import Image from "next/image";
+export default function ResultsPage() {
+  const searchParams = useSearchParams();
 
-import { HeroLogo } from "@/components/HeroLogo";
-import { PrimarySearchForm } from "@/components/PrimarySearchForm";
+  const searchedQuery = searchParams.get("searchedQuery") || "";
+  const sourceURL = searchParams.get("sourceURL") || "";
 
-const gradients = [
-  "/images/Gradient-1.png",
-  "/images/Gradient-2.png",
-  "/images/Gradient-3.png",
-  "/images/Gradient-4.png",
-  "/images/Gradient-5.png",
-];
-
-export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchedQuery, setSearchedQuery] = useState("");
-  const [sourceURL, setSourceURL] = useState("");
   const [currentGradient, setCurrentGradient] = useState(-1);
-  const [customizeOpen, setCustomizeOpen] = useState(false);
   const [customModeEnabled, setCustomModeEnabled] = useState(false);
+  const [customizeOpen, setCustomizeOpen] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
-
-  const { toast } = useToast();
+  const { theme } = useTheme();
 
   const router = useRouter();
+
+  const resetSearch = () => {
+    // setSearchQuery("");
+    // setSearchedQuery("");
+    // setSourceURL("");
+    // setHasSearched(false);
+    console.log("Hello");
+  };
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (hasSearched) {
-      setCurrentGradient(-1);
-      setCustomModeEnabled(false);
-    }
-  }, [hasSearched]);
-
-  useEffect(() => {
-    if (mounted) {
-      if (hasSearched) {
-        setCurrentGradient(-1);
-        setCustomModeEnabled(false);
-      }
-    }
-  }, [hasSearched, mounted]);
 
   if (!mounted) return null;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedSearch = searchQuery.trim();
-    const trimmedSourceURL = sourceURL.trim();
-    if (searchQuery.trim() && sourceURL.trim()) {
-      setSearchedQuery(searchQuery);
+    if (searchQuery.trim()) {
       const query = new URLSearchParams({
         searchedQuery: trimmedSearch,
-        sourceURL: trimmedSourceURL,
+        sourceURL: sourceURL,
       }).toString();
       router.push(`/results?${query}`);
-    } else if (sourceURL.trim()) {
-      //no search query
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Search is empty.",
-      });
-    } else if (searchQuery.trim()) {
-      //no sourceURL
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "No Source URL provided.",
-      });
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "No Search or Source URL provided.",
-      });
+      //setSearchedQuery(searchQuery);
     }
   };
 
@@ -127,26 +86,39 @@ export default function Home() {
           customizeOpen ? "mr-[250px]" : ""
         }`}
       >
-        <div
-          className={`w-full transition-all duration-500 ${
-            hasSearched ? "bg-background/80 backdrop-blur-sm" : ""
-          }`}
-        >
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col items-center space-y-10 py-16">
-              <HeroLogo />
-              <div className="w-full max-w-5xl flex flex-col">
-                <PrimarySearchForm
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  sourceURL={sourceURL}
-                  setSourceURL={setSourceURL}
-                  handleSearch={handleSearch}
+        <div className="py-4 pl-5">
+          <div className="flex items-center gap-4">
+            <button onClick={resetSearch} className="h-12 relative shrink-0">
+              <Image
+                src={
+                  theme === "light"
+                    ? "/images/NOVA-Logo-Black-Big.png"
+                    : "/images/NOVA-Logo-White-Big.png"
+                }
+                alt="Nova"
+                width={96}
+                height={48}
+                className="object-contain transition-opacity duration-700"
+                priority
+              />
+            </button>
+
+            <form onSubmit={handleSearch} className="w-full max-w-2xl">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input
+                  type="text"
+                  placeholder="Search or type a URL"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-4 py-6 rounded-full bg-background/80 placeholder:text-muted-foreground"
                 />
               </div>
-            </div>
+            </form>
           </div>
         </div>
+        <SearchResults query={searchedQuery} />
+
         <div className="fixed top-4 right-4">
           <Button
             variant="ghost"
@@ -169,6 +141,7 @@ export default function Home() {
             <span className="sr-only">Customize</span>
           </Button>
         </div>
+
         <CustomizeSidebar
           open={customizeOpen}
           onOpenChange={setCustomizeOpen}
