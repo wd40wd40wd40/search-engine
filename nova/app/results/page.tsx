@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 
-import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
@@ -15,7 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CustomizeSidebar } from "@/components/customize-sidebar";
 import { Toaster } from "@/components/ui/toaster";
-import { ResultsHeroLogo } from "../ResultsHeroLogo";
+import { ResultsHeroLogo } from "../../components/ResultsHeroLogo";
+import { ResultsSearchForm } from "@/components/ResultsSearchForm";
 
 export default function ResultsPage() {
   const searchParams = useSearchParams(); // for extracting search and url from home page
@@ -86,18 +86,11 @@ export default function ResultsPage() {
         <div className="py-4 pl-5">
           <div className="flex items-center gap-4">
             <ResultsHeroLogo resetSearch={resetSearch} />
-            <form onSubmit={handleSearch} className="w-full max-w-2xl">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input
-                  type="text"
-                  placeholder="Search or type a URL"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-6 rounded-full bg-background/80 placeholder:text-muted-foreground"
-                />
-              </div>
-            </form>
+            <ResultsSearchForm
+              handleSearch={handleSearch}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
           </div>
         </div>
         <SearchResults query={searchedQuery} />
