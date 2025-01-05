@@ -1,4 +1,5 @@
 import asyncio
+import json
 from crawler.crawler import Crawler
 
 async def main():
@@ -18,9 +19,14 @@ async def main():
     # 5) After crawling, the index has been finalized. Retrieve it from storage:
     index_data = crawler.indexer.storage.get_index()
 
-    # 6) Print a summary
-    print(f"\nCrawled {len(crawler.visited)} pages.")
-    print(f"Indexed {len(index_data)} unique tokens.\n")
+    # 6) Print a summary AND save to JSON
+    with open("index_data.json", "w", encoding="utf-8") as f:
+        json.dump(index_data, f, ensure_ascii=False)
+
+    print("Crawl Complete")
+
+    # print(f"\nCrawled {len(crawler.visited)} pages.")
+    # print(f"Indexed {len(index_data)} unique tokens.\n")
 
     # 7) (Optional) Print postings for a sample token
     sample_token = "example"  # or any other word you suspect is in the text
