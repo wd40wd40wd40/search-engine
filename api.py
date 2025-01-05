@@ -14,14 +14,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+INDEX_DATA: Dict[str, Dict[str,float]] = {} # holds loaded index data
 
-@app.get("/search", response_model=List[SearchResult])
-def search_endpoint(q: str):
-    """
-    Example endpoint:
-    Send a GET request to: /search?q=<query>
-    """
-    results = get_search_results(q)
-    return results
+@app.on_event("startup")
+def load_index_data():
+    global INDEX_DATA
+    try:
+        with open("index_data.json", "r", encoding="utf-8") as f:
+            INDEX_DATA = json.load(f)
+        print("Index data loaded")
+    except FileNotFoundError:
+        print("Index data not generated")
+
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to my FastAPI. Try /search?q=<query>!"}
+
+@app.get("/search")
+def search(q: str):
+    if not q:
+        raise HTTPException(status_code=400, detail="Missing query parameter 'q'")
+    
+    token = q.lower()
+    if token not in INDEX_DATA:
+        return {"results": []}
+    
+    postings = INDEX_DATA[token]
+
+    results = [{"doc_id": doc_id, "score": score} for doc_id, score in postings.items()]
+    return {"results": results}
 
 # To run: python -m uvicorn api:app --reload
