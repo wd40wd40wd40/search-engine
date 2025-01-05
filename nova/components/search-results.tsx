@@ -69,14 +69,12 @@ export function SearchResults({ query }: SearchResultsProps) {
       <div className='space-y-6'>
         {results.map((res, index) => (
           <div key={index} className='max-w-2xl'>
-            {/* Because our Python API returns doc_id and score,
-                we might need more info to display a real "title" or "description." */}
-            <div className='text-xs text-muted-foreground mb-1'>
-              doc_id: {res.doc_id}
-            </div>
             <h2 className='text-lg font-medium text-primary mb-1'>
               Score: {res.score}
             </h2>
+            <div className='text-xs text-muted-foreground mb-1'>
+              doc_id: {res.doc_id}
+            </div>
           </div>
         ))}
       </div>
