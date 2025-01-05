@@ -1,53 +1,85 @@
+import { useEffect, useState } from "react";
+
 interface SearchResultsProps {
-  query: string
+  query: string;
+}
+
+interface APISearchResult {
+  doc_id: string;
+  score: number;
 }
 
 export function SearchResults({ query }: SearchResultsProps) {
-  // Placeholder results - now using the passed query that only updates on form submit
-  const results = [
-    {
-      title: `Example Search Result for "${query}"`,
-      url: "https://example.com/1",
-      description: `This is a placeholder result that matches your search for "${query}". It demonstrates how search results will appear once the web crawler is implemented.`
-    },
-    {
-      title: "Related Search Result",
-      url: "https://example.com/2",
-      description: "Another placeholder result showing how multiple search results will be displayed in a list format."
-    },
-    {
-      title: "Additional Search Result",
-      url: "https://example.com/3",
-      description: "A third placeholder result to demonstrate the layout and styling of search results in the Nova search engine."
-    }
-  ]
+  const [results, setResults] = useState<APISearchResult[]>([]);
+
+  // For loading, will update later
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!query) return;
+
+    setLoading(true);
+    setError(null);
+
+    fetch(`http://127.0.0.1:8000/search?q=${encodeURIComponent(query)}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error. status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data && Array.isArray(data.results)) {
+          setResults(data.results);
+        } else {
+          setResults([]);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [query]);
+
+  if (loading) {
+    return (
+      <div>
+        <h1>Results loading</h1>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <h1>Error: {error}</h1>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <p className="text-sm text-muted-foreground mb-4">
-        About {results.length} results
+    <div className='container mx-auto px-4 py-6'>
+      <p className='text-sm text-muted-foreground mb-4'>
+        Found {results.length} results for &quot;{query}&quot;:
       </p>
-      <div className="space-y-6">
-        {results.map((result, index) => (
-          <div key={index} className="max-w-2xl">
-            <a 
-              href={result.url}
-              className="group block"
-            >
-              <div className="text-xs text-muted-foreground mb-1">
-                {result.url}
-              </div>
-              <h2 className="text-lg font-medium text-primary group-hover:underline mb-1">
-                {result.title}
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {result.description}
-              </p>
-            </a>
+      <div className='space-y-6'>
+        {results.map((res, index) => (
+          <div key={index} className='max-w-2xl'>
+            {/* Because our Python API returns doc_id and score,
+                we might need more info to display a real "title" or "description." */}
+            <div className='text-xs text-muted-foreground mb-1'>
+              doc_id: {res.doc_id}
+            </div>
+            <h2 className='text-lg font-medium text-primary mb-1'>
+              Score: {res.score}
+            </h2>
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
-
