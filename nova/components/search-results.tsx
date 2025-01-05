@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface SearchResultsProps {
@@ -73,7 +74,7 @@ export function SearchResults({ query }: SearchResultsProps) {
               Score: {res.score}
             </h2>
             <div className='text-xs text-muted-foreground mb-1'>
-              doc_id: {res.doc_id}
+              <Link href={res.doc_id}>{res.doc_id}</Link>
             </div>
           </div>
         ))}
