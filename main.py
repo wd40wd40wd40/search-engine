@@ -24,9 +24,8 @@ async def main():
         json.dump(index_data, f, ensure_ascii=False)
 
     print("Crawl Complete")
-
-    # print(f"\nCrawled {len(crawler.visited)} pages.")
-    # print(f"Indexed {len(index_data)} unique tokens.\n")
+    print(f"\nCrawled {len(crawler.visited)} pages.")
+    print(f"Indexed {len(index_data)} unique tokens.\n")
 
     # 7) (Optional) Print postings for a sample token
     sample_token = "example"  # or any other word you suspect is in the text
