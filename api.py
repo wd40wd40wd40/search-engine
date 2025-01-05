@@ -1,20 +1,19 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import List, Any
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+import json
+from typing import Dict, Any
 
 app = FastAPI()
 
-# The following code is going to be dummy data for now as I try to connect the api to the frontend
-class SearchResult(BaseModel):
-    url: str
-    title: str
-    snippet: str
+# Handle CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-def get_search_results(query: str) -> List[SearchResult]:
-    return [
-        SearchResult(url="https://example.com", title="Example", snippet="Example snippet..."),
-        SearchResult(url="https://another.com", title="Another", snippet="Another snippet...")
-    ]
 
 @app.get("/search", response_model=List[SearchResult])
 def search_endpoint(q: str):
