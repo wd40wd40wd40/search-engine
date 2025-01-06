@@ -27,7 +27,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedQuery, setSearchedQuery] = useState("");
   const [sourceURL, setSourceURL] = useState("");
-  const [maxPages, setMaxPages] = useState(1000);
+  const [maxPages, setMaxPages] = useState(100);
   const [maxDepth, setMaxDepth] = useState(3);
   const [currentGradient, setCurrentGradient] = useState(-1);
   const [customizeOpen, setCustomizeOpen] = useState(false);
