@@ -11,6 +11,7 @@ import { HeroLogo } from "@/components/HeroLogo";
 import { PrimarySearchForm } from "@/components/PrimarySearchForm";
 import { CustomizeSidebar } from "@/components/customize-sidebar";
 import SettingsHomePage from "@/components/SettingsHomePage";
+import { LoadingOverlay } from "@/components/LoadingOverlay";
 
 const gradients = [
   "/images/Gradient-1.png",
@@ -36,6 +37,7 @@ export default function Home() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [status, setStatus] = useState("");
+  const [isCrawling, setIsCrawling] = useState(false);
 
   const { toast } = useToast();
 
@@ -63,35 +65,6 @@ export default function Home() {
 
   if (!mounted) return null;
 
-  async function handleCrawl(e: React.FormEvent) {
-    e.preventDefault();
-    setStatus("Crawling...");
-
-    try {
-      const response = await fetch("http://127.0.0.1:8000/crawl", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          url: sourceURL,
-          max_pages: maxPages,
-          max_depth: maxDepth,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to crawl: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setStatus(
-        `Success! ${data.message}. Indexed ${data.total_tokens} tokens.`
-      );
-    } catch (error: any) {
-      console.error(error);
-      setStatus(error.message);
-    }
-  }
-
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -99,6 +72,7 @@ export default function Home() {
     const trimmedSourceURL = sourceURL.trim();
 
     if (trimmedSearch && trimmedSourceURL) {
+      setIsCrawling(true);
       try {
         // 1) Call your FastAPI crawler endpoint:
         const crawlRes = await fetch("http://127.0.0.1:8000/crawl", {
@@ -135,6 +109,8 @@ export default function Home() {
           title: "Uh oh! Something went wrong.",
           description: error.message,
         });
+      } finally {
+        setIsCrawling(false);
       }
     }
     // If only the source URL is provided, no search query
@@ -250,6 +226,7 @@ export default function Home() {
           onCustomModeChange={handleCustomModeChange}
         />
       </div>
+      {isCrawling && <LoadingOverlay />}
       <Toaster />
     </div>
   );
