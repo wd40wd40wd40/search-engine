@@ -2,8 +2,14 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from typing import Dict, Any
+import asyncio
+from pydantic import BaseModel
+
+from crawler.crawler import Crawler
 
 app = FastAPI()
+
+index_data: Dict[str, Dict[str,float]] = {} # holds loaded index data
 
 # Handle CORS
 app.add_middleware(
@@ -14,18 +20,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-INDEX_DATA: Dict[str, Dict[str,float]] = {} # holds loaded index data
+class CrawlRequest(BaseModel):
+    url: str
+    max_pages: int = 10
+    max_depth: int = 2
 
-@app.on_event("startup")
-def load_index_data():
-    global INDEX_DATA
-    try:
-        with open("index_data.json", "r", encoding="utf-8") as f:
-            INDEX_DATA = json.load(f)
-        print("Index data loaded")
-    except FileNotFoundError:
-        print("Index data not generated")
+@app.post("/crawl")
+async def crawl_endpoint(data: CrawlRequest):
+    global index_data
+    crawler = Crawler(
+        start_url=data.url, 
+        max_pages=data.max_pages, 
+        max_depth=data.max_depth
+    )
 
+    await crawler.crawl()
+
+    index_data = crawler.indexer.storage.get_index()
+
+    with open("index_data.json", "w", encoding="utf-8") as f:
+        json.dump(index_data, f, ensure_ascii=False)
+    
+    return {
+        "message": f"Crawl Finished"
+    }
 
 @app.get("/")
 def read_root():
@@ -37,12 +55,11 @@ def search(q: str):
         raise HTTPException(status_code=400, detail="Missing query parameter 'q'")
     
     token = q.lower()
-    if token not in INDEX_DATA:
+    if token not in index_data:
         return {"results": []}
     
-    postings = INDEX_DATA[token]
+    postings = index_data[token]
 
     results = [{"doc_id": doc_id, "score": score} for doc_id, score in postings.items()]
     return {"results": results}
-
 # To run: python -m uvicorn api:app --reload

@@ -5,16 +5,8 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { UserCircle, Paintbrush } from "lucide-react";
-import { Settings } from "lucide-react";
 import { HeroLogo } from "@/components/HeroLogo";
 import { PrimarySearchForm } from "@/components/PrimarySearchForm";
 import { CustomizeSidebar } from "@/components/customize-sidebar";
@@ -40,6 +32,7 @@ export default function Home() {
   const [hasSearched, setHasSearched] = useState(false);
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [status, setStatus] = useState("");
 
   const { toast } = useToast();
 
@@ -67,32 +60,98 @@ export default function Home() {
 
   if (!mounted) return null;
 
-  const handleSearch = (e: React.FormEvent) => {
+  async function handleCrawl(e: React.FormEvent) {
     e.preventDefault();
+    setStatus("Crawling...");
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/crawl", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: sourceURL,
+          max_pages: maxPages,
+          max_depth: maxDepth,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to crawl: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setStatus(
+        `Success! ${data.message}. Indexed ${data.total_tokens} tokens.`
+      );
+    } catch (error: any) {
+      console.error(error);
+      setStatus(error.message);
+    }
+  }
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     const trimmedSearch = searchQuery.trim();
     const trimmedSourceURL = sourceURL.trim();
-    if (searchQuery.trim() && sourceURL.trim()) {
-      setSearchedQuery(searchQuery);
-      const query = new URLSearchParams({
-        searchedQuery: trimmedSearch,
-        sourceURL: trimmedSourceURL,
-      }).toString();
-      router.push(`/results?${query}`);
-    } else if (sourceURL.trim()) {
-      //no search query
+
+    if (trimmedSearch && trimmedSourceURL) {
+      try {
+        // 1) Call your FastAPI crawler endpoint:
+        const crawlRes = await fetch("http://127.0.0.1:8000/crawl", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            url: trimmedSourceURL,
+            max_pages: maxPages, // or whatever defaults you want
+            max_depth: maxDepth,
+          }),
+        });
+
+        if (!crawlRes.ok) {
+          // If the crawl fails, throw an error
+          throw new Error(
+            `Crawling failed with status code: ${crawlRes.status}`
+          );
+        }
+
+        // 2) Crawl succeeded, continue with your existing flow
+        const data = await crawlRes.json();
+        console.log("Crawl success:", data);
+
+        setSearchedQuery(trimmedSearch);
+        const query = new URLSearchParams({
+          searchedQuery: trimmedSearch,
+          sourceURL: trimmedSourceURL,
+        }).toString();
+        router.push(`/results?${query}`);
+      } catch (error: any) {
+        console.error(error);
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: error.message,
+        });
+      }
+    }
+    // If only the source URL is provided, no search query
+    else if (trimmedSourceURL) {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description: "Search is empty.",
       });
-    } else if (searchQuery.trim()) {
-      //no sourceURL
+    }
+    // If only the search query is provided, no source URL
+    else if (trimmedSearch) {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description: "No Source URL provided.",
       });
-    } else {
+    }
+    // If neither is provided
+    else {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
