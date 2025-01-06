@@ -18,6 +18,7 @@ import { Settings } from "lucide-react";
 import { HeroLogo } from "@/components/HeroLogo";
 import { PrimarySearchForm } from "@/components/PrimarySearchForm";
 import { CustomizeSidebar } from "@/components/customize-sidebar";
+import SettingsHomePage from "@/components/SettingsHomePage";
 
 const gradients = [
   "/images/Gradient-1.png",
@@ -31,6 +32,8 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedQuery, setSearchedQuery] = useState("");
   const [sourceURL, setSourceURL] = useState("");
+  const [maxPages, setMaxPages] = useState(1000);
+  const [maxDepth, setMaxDepth] = useState(3);
   const [currentGradient, setCurrentGradient] = useState(-1);
   const [customizeOpen, setCustomizeOpen] = useState(false);
   const [customModeEnabled, setCustomModeEnabled] = useState(false);
@@ -135,42 +138,12 @@ export default function Home() {
             <div className='flex flex-col items-center space-y-10 py-16'>
               <div className='flex flex-row'>
                 <HeroLogo />
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant='outline' size='icon'>
-                      <Settings></Settings>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className='w-80'>
-                    <div className='grid gap-4'>
-                      <div className='space-y-2'>
-                        <h4 className='font-medium leading-none'>
-                          Configuration
-                        </h4>
-                      </div>
-                      <div className='grid gap-2'>
-                        <div className='grid grid-cols-3 items-center gap-4'>
-                          <Label htmlFor='max_pages'>Max Pages</Label>
-                          <Input
-                            id='width'
-                            defaultValue='100%'
-                            className='col-span-2 h-8'
-                          />
-                        </div>
-                      </div>
-                      <div className='grid gap-2'>
-                        <div className='grid grid-cols-3 items-center gap-4'>
-                          <Label htmlFor='max_depth'>Max Depth</Label>
-                          <Input
-                            id='width'
-                            defaultValue='100%'
-                            className='col-span-2 h-8'
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <SettingsHomePage
+                  maxPages={maxPages}
+                  setMaxPages={setMaxPages}
+                  maxDepth={maxDepth}
+                  setMaxDepth={setMaxDepth}
+                />
               </div>
               <div className='w-full max-w-5xl flex flex-col'>
                 <PrimarySearchForm
