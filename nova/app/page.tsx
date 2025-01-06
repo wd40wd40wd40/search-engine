@@ -5,6 +5,13 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { UserCircle, Paintbrush } from "lucide-react";
 import { Settings } from "lucide-react";
@@ -126,7 +133,45 @@ export default function Home() {
         >
           <div className='container mx-auto px-4'>
             <div className='flex flex-col items-center space-y-10 py-16'>
-              <HeroLogo />
+              <div className='flex flex-row'>
+                <HeroLogo />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant='outline' size='icon'>
+                      <Settings></Settings>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-80'>
+                    <div className='grid gap-4'>
+                      <div className='space-y-2'>
+                        <h4 className='font-medium leading-none'>
+                          Configuration
+                        </h4>
+                      </div>
+                      <div className='grid gap-2'>
+                        <div className='grid grid-cols-3 items-center gap-4'>
+                          <Label htmlFor='max_pages'>Max Pages</Label>
+                          <Input
+                            id='width'
+                            defaultValue='100%'
+                            className='col-span-2 h-8'
+                          />
+                        </div>
+                      </div>
+                      <div className='grid gap-2'>
+                        <div className='grid grid-cols-3 items-center gap-4'>
+                          <Label htmlFor='max_depth'>Max Depth</Label>
+                          <Input
+                            id='width'
+                            defaultValue='100%'
+                            className='col-span-2 h-8'
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
               <div className='w-full max-w-5xl flex flex-col'>
                 <PrimarySearchForm
                   searchQuery={searchQuery}
