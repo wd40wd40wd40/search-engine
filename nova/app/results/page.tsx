@@ -83,7 +83,7 @@ export default function ResultsPage() {
           customizeOpen ? "mr-[250px]" : ""
         }`}
       >
-        <div className="py-4 pl-5">
+        <div className="py-4 pl-4">
           <div className="flex items-center gap-4">
             <ResultsHeroLogo resetSearch={resetSearch} />
             <ResultsSearchForm

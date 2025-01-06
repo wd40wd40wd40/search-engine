@@ -18,6 +18,9 @@ const gradients = [
   "/images/Gradient-3.png",
   "/images/Gradient-4.png",
   "/images/Gradient-5.png",
+  "/images/Gradient-6.png",
+  "/images/Gradient-7.png",
+  "/images/Gradient-8.png",
 ];
 
 export default function Home() {
@@ -232,7 +235,7 @@ export default function Home() {
             variant='ghost'
             size='icon'
             onClick={() => setCustomizeOpen(true)}
-            className='rounded-full bg-background/80 backdrop-blur-sm'
+            className='rounded-full bg-background/80 backdrop-blur-sm transition-all duration-500'
           >
             <Paintbrush className='h-5 w-5' />
             <span className='sr-only'>Customize</span>
