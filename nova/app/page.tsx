@@ -26,6 +26,9 @@ const gradients = [
   "/images/Gradient-3.png",
   "/images/Gradient-4.png",
   "/images/Gradient-5.png",
+  "/images/Gradient-6.png",
+  "/images/Gradient-7.png",
+  "/images/Gradient-8.png",
 ];
 
 export default function Home() {
@@ -132,10 +135,10 @@ export default function Home() {
             hasSearched ? "bg-background/80 backdrop-blur-sm" : ""
           }`}
         >
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col items-center space-y-10 py-16">
+          <div className="container mx-auto px-4 transition-all duration-500">
+            <div className="flex flex-col items-center space-y-10 py-16 transition-all duration-500">
               <HeroLogo />
-              <div className="w-full max-w-5xl flex flex-col">
+              <div className="w-full max-w-5xl flex flex-col transition-all duration-500">
                 <PrimarySearchForm
                   searchQuery={searchQuery}
                   setSearchQuery={setSearchQuery}
@@ -151,7 +154,7 @@ export default function Home() {
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full bg-background/80 backdrop-blur-sm"
+            className="rounded-full bg-background/80 backdrop-blur-sm transition-all duration-500"
           >
             <UserCircle className="h-5 w-5" />
             <span className="sr-only">Sign in</span>
@@ -163,7 +166,7 @@ export default function Home() {
             variant="ghost"
             size="icon"
             onClick={() => setCustomizeOpen(true)}
-            className="rounded-full bg-background/80 backdrop-blur-sm"
+            className="rounded-full bg-background/80 backdrop-blur-sm transition-all duration-500"
           >
             <Paintbrush className="h-5 w-5" />
             <span className="sr-only">Customize</span>

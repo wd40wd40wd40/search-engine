@@ -27,6 +27,9 @@ const gradientIcons = [
   "/images/Gradient-Icon-3.png",
   "/images/Gradient-Icon-4.png",
   "/images/Gradient-Icon-5.png",
+  "/images/Gradient-Icon-6.png",
+  "/images/Gradient-Icon-7.png",
+  "/images/Gradient-Icon-8.png",
 ]
 
 export function CustomizeSidebar({ 
