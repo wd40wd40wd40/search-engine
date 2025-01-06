@@ -2,23 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { CustomizeSidebar } from "@/components/customize-sidebar";
-import { SearchResults } from "@/components/search-results";
-import { Toaster } from "@/components/ui/toaster";
-
-import { useToast } from "@/hooks/use-toast";
-
-import { UserCircle, Paintbrush } from "lucide-react";
-import { Search } from "lucide-react";
-
 import { useTheme } from "next-themes";
-import Image from "next/image";
-
+import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
+import { UserCircle, Paintbrush } from "lucide-react";
+import { Settings } from "lucide-react";
 import { HeroLogo } from "@/components/HeroLogo";
 import { PrimarySearchForm } from "@/components/PrimarySearchForm";
+import { CustomizeSidebar } from "@/components/customize-sidebar";
 
 const gradients = [
   "/images/Gradient-1.png",
@@ -132,10 +124,10 @@ export default function Home() {
             hasSearched ? "bg-background/80 backdrop-blur-sm" : ""
           }`}
         >
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col items-center space-y-10 py-16">
+          <div className='container mx-auto px-4'>
+            <div className='flex flex-col items-center space-y-10 py-16'>
               <HeroLogo />
-              <div className="w-full max-w-5xl flex flex-col">
+              <div className='w-full max-w-5xl flex flex-col'>
                 <PrimarySearchForm
                   searchQuery={searchQuery}
                   setSearchQuery={setSearchQuery}
@@ -147,26 +139,26 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="fixed top-4 right-4">
+        <div className='fixed top-4 right-4'>
           <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full bg-background/80 backdrop-blur-sm"
+            variant='ghost'
+            size='icon'
+            className='rounded-full bg-background/80 backdrop-blur-sm'
           >
-            <UserCircle className="h-5 w-5" />
-            <span className="sr-only">Sign in</span>
+            <UserCircle className='h-5 w-5' />
+            <span className='sr-only'>Sign in</span>
           </Button>
         </div>
 
-        <div className="fixed bottom-4 right-4">
+        <div className='fixed bottom-4 right-4'>
           <Button
-            variant="ghost"
-            size="icon"
+            variant='ghost'
+            size='icon'
             onClick={() => setCustomizeOpen(true)}
-            className="rounded-full bg-background/80 backdrop-blur-sm"
+            className='rounded-full bg-background/80 backdrop-blur-sm'
           >
-            <Paintbrush className="h-5 w-5" />
-            <span className="sr-only">Customize</span>
+            <Paintbrush className='h-5 w-5' />
+            <span className='sr-only'>Customize</span>
           </Button>
         </div>
         <CustomizeSidebar
