@@ -34,9 +34,7 @@ export default function Home() {
   const [customizeOpen, setCustomizeOpen] = useState(false);
   const [customModeEnabled, setCustomModeEnabled] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [status, setStatus] = useState("");
   const [isCrawling, setIsCrawling] = useState(false);
 
   const { toast } = useToast();
@@ -74,25 +72,22 @@ export default function Home() {
     if (trimmedSearch && trimmedSourceURL) {
       setIsCrawling(true);
       try {
-        // 1) Call your FastAPI crawler endpoint:
         const crawlRes = await fetch("http://127.0.0.1:8000/crawl", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             url: trimmedSourceURL,
-            max_pages: maxPages, // or whatever defaults you want
+            max_pages: maxPages,
             max_depth: maxDepth,
           }),
         });
 
         if (!crawlRes.ok) {
-          // If the crawl fails, throw an error
           throw new Error(
             `Crawling failed with status code: ${crawlRes.status}`
           );
         }
 
-        // 2) Crawl succeeded, continue with your existing flow
         const data = await crawlRes.json();
         console.log("Crawl success:", data);
 
@@ -112,25 +107,19 @@ export default function Home() {
       } finally {
         setIsCrawling(false);
       }
-    }
-    // If only the source URL is provided, no search query
-    else if (trimmedSourceURL) {
+    } else if (trimmedSourceURL) {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description: "Search is empty.",
       });
-    }
-    // If only the search query is provided, no source URL
-    else if (trimmedSearch) {
+    } else if (trimmedSearch) {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description: "No Source URL provided.",
       });
-    }
-    // If neither is provided
-    else {
+    } else {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
