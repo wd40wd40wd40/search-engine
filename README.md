@@ -16,7 +16,7 @@ Important concepts:
 FUTURE Improvements:
     Crawler:
         1. Add a database to store previously crawled data with a time of crawl attached. Can then set condition to recrawl
-            after set amount of time or manual update.
+            after set amount of time or manual update. Temporarily, we are storing the crawled data in a JSON file.
 
 
 
@@ -38,19 +38,19 @@ POTENTIAL ISSUES:
 
 CURRENT PROJECT TRACK:
     Backend:
-    1. Build Crawler (In Progress)
-    1b. Test Crawler
-    2. Add reverse indexing
-    2b. Test reverse indexing
-    3. Add ranking (TF-IDF)
-    3b. Test Ranking
+    1. Build Crawler ✅
+    1b. Test Crawler ✅
+    2. Add reverse indexing ✅
+    2b. Test reverse indexing ✅
+    3. Add ranking (TF-IDF) ✅
+    3b. Test Ranking ✅
 
 
     Frontend:
     1. Setup website ✅
     2. Setup search and crawling for user input and press ✅
-    3. Test it 
-    4. Connect it to backend
+    3. Test it ✅
+    4. Connect it to backend ✅
 
 
 Design Choices:
