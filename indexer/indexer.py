@@ -12,7 +12,7 @@ class Indexer:
 
     def __init__(self):
         self.tokenizer = Tokenizer()       # External library or custom tokenizer
-        self.storage = IndexStorage()      # Where we store final TF–IDF
+        self.storage = IndexStorage()      # Where we store final TF–IDF and Titles
 
         # In-memory raw frequency structures:
         self.inverted_index = defaultdict(lambda: defaultdict(int))
@@ -34,6 +34,9 @@ class Indexer:
             self.inverted_index[term][document_id] += count
 
         self.doc_lengths[document_id] = sum(freq_map.values())
+
+    def set_document_title(self, doc_id, title):
+        self.storage.set_title(doc_id, title)
 
     def finalize_index(self):
         """
