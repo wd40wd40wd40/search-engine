@@ -9,7 +9,10 @@ from crawler.crawler import Crawler
 
 app = FastAPI()
 
-index_data: Dict[str, Dict[str,float]] = {} # holds loaded index data
+index_data: Dict[str, Any] = {
+    "tokens": {},
+    "titles": {}
+}
 
 # Handle CORS
 app.add_middleware(
@@ -54,12 +57,24 @@ def search(q: str):
     if not q:
         raise HTTPException(status_code=400, detail="Missing query parameter 'q'")
     
+    tokens_dict = index_data.get("tokens", {})
+    titles_dict = index_data.get("titles", {})
+
     token = q.lower()
     if token not in index_data:
         return {"results": []}
     
-    postings = index_data[token]
+    postings = tokens_dict[token]
 
-    results = [{"doc_id": doc_id, "score": score} for doc_id, score in postings.items()]
+    results = []
+
+    for doc_id, score in postings.items():
+        title = titles_dict.get(doc_id, "(No title)")
+        results.append({
+            "doc_id": doc_id,
+            "title": title,
+            "score": score
+        })
+
     return {"results": results}
 # To run: python -m uvicorn api:app --reload
