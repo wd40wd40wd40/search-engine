@@ -61,7 +61,7 @@ def search(q: str):
     titles_dict = index_data.get("titles", {})
 
     token = q.lower()
-    if token not in index_data:
+    if token not in tokens_dict:
         return {"results": []}
     
     postings = tokens_dict[token]

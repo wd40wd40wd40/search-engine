@@ -120,7 +120,6 @@ class Crawler:
         if self.page_count % 50 == 0:
             elapsed = time.perf_counter() - self.overall_start
             print(f"[Progress] Crawled {self.page_count} pages so far in {elapsed:.2f}s")
-            # print(f"Title: {title}")1
 
         # BFS queue
         if depth < self.max_depth:
