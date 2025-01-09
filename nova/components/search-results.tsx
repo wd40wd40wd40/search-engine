@@ -63,7 +63,7 @@ export function SearchResults({ query }: SearchResultsProps) {
   }
 
   return (
-    <div className='container mx-auto px-8 py-6 display-flex'>
+    <div className='container mx-40 py-6 display-flex transition-all duration-300'>
       <p className='text-sm text-muted-foreground mb-4'>
         Found {results.length} results for &quot;{query}&quot;:
       </p>
