@@ -114,11 +114,13 @@ class Crawler:
         # Index
         combined_text = (title + " " + text).strip()
         self.indexer.add_document(url, combined_text)
+        self.indexer.set_document_title(url, title)
 
         # Only print progress every 50 pages
         if self.page_count % 50 == 0:
             elapsed = time.perf_counter() - self.overall_start
             print(f"[Progress] Crawled {self.page_count} pages so far in {elapsed:.2f}s")
+            # print(f"Title: {title}")1
 
         # BFS queue
         if depth < self.max_depth:
