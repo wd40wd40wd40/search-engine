@@ -38,6 +38,5 @@ class Parser:
         else:
             description = "No Description"
 
-
         # Return all 4 so you have the full page text for indexing
         return title, text, links, description

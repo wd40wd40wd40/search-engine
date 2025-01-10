@@ -14,9 +14,12 @@ class IndexStorage:
         # title
         self.doc_titles = {}
 
+        # description
+        self.doc_descriptions = {}
+
     def store_value(self, token, doc_id, tf_idf):
         """
-        Store the final TF–IDF weight for a (token, doc_id) pair.
+        Store the final TF-IDF weight for a (token, doc_id) pair.
         """
         self.index_data[token][doc_id] = tf_idf
     
@@ -25,6 +28,12 @@ class IndexStorage:
         Store the title of the document.
         """
         self.doc_titles[doc_id] = title
+
+    def set_description(self, doc_id, description):
+        """
+        Store the description of the document.
+        """
+        self.doc_descriptions[doc_id] = description
 
     def get_index(self):
         """
@@ -40,7 +49,8 @@ class IndexStorage:
         """
         return {
             "tokens": self.index_data,
-            "titles": self.doc_titles
+            "titles": self.doc_titles,
+            "descriptions": self.doc_descriptions
         }
     def save_to_disk(self, filepath):
         """
@@ -48,12 +58,14 @@ class IndexStorage:
         """
         data_to_save = {
             "tokens": {},
-            "titles": {}
+            "titles": {},
+            "descriptions": {}
         }
         for token, docs in self.index_data.items():
             data_to_save[token] = {doc_id: tfidf for doc_id, tfidf in docs.items()}
 
         data_to_save["titles"] = self.doc_titles
+        data_to_save["descriptions"] = self.doc_descriptions
 
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(data_to_save, f, ensure_ascii=False, indent=2)
@@ -66,8 +78,10 @@ class IndexStorage:
             loaded = json.load(f)
         self.index_data.clear()
         self.doc_titles.clear()
+        self.doc_descriptions.clear()
         tokens = loaded.get("tokens", {})
         for token, docs in tokens.items():
             self.index_data[token] = docs
         self.doc_titles = loaded.get("titles", {})
+        self.doc_descriptions = loaded.get("descriptions", {})
 
