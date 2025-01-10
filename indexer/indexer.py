@@ -38,6 +38,9 @@ class Indexer:
     def set_document_title(self, doc_id, title):
         self.storage.set_title(doc_id, title)
 
+    def set_document_description(self, doc_id, description):
+        self.storage.set_description(doc_id, description)
+
     def finalize_index(self):
         """
         Convert raw frequencies into TF–IDF and store them in self.storage.
