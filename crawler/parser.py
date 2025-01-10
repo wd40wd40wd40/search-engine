@@ -13,6 +13,9 @@ class Parser:
         # Title or fallback
         title = soup.title.get_text(strip=True) if soup.title else "No Title"
 
+        # description
+        meta_description = soup.find('meta', attrs={'name': 'description'})
+
         # Remove <script> and <style> tags so they don’t clutter the text
         for script_or_style in soup(["script", "style"]):
             script_or_style.decompose()
@@ -30,5 +33,11 @@ class Parser:
             normalized_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path.rstrip('/')}"
             links.add(normalized_url)
 
-        # Return all 3 so you have the full page text for indexing
-        return title, text, links
+        if meta_description and 'content' in meta_description.attrs:
+            description = meta_description['content']
+        else:
+            description = "No Description"
+
+
+        # Return all 4 so you have the full page text for indexing
+        return title, text, links, description
