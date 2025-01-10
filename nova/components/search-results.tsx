@@ -71,11 +71,11 @@ export function SearchResults({ query }: SearchResultsProps) {
       <div className='space-y-6'>
         {results.map((res, index) => (
           <div key={index} className='max-w-2xl'>
-            {/* TESTING */}
             <h2 className='text-lg font-medium text-primary mb-1'>
-              <Link href={res.doc_id}>{res.title}</Link>
+              <Link href={res.doc_id} target='_blank'>
+                {res.title}
+              </Link>
             </h2>
-            {/* TESTING */}
             <h4 className='text-lg font-medium text-primary mb-1'>
               Score: {res.score}
             </h4>
