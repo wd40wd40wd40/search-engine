@@ -73,7 +73,7 @@ export function SearchResults({ query }: SearchResultsProps) {
           <div key={index} className='max-w-2xl'>
             {/* TESTING */}
             <h2 className='text-lg font-medium text-primary mb-1'>
-              Title: {res.title}
+              <Link href={res.doc_id}>{res.title}</Link>
             </h2>
             {/* TESTING */}
             <h4 className='text-lg font-medium text-primary mb-1'>
@@ -81,6 +81,7 @@ export function SearchResults({ query }: SearchResultsProps) {
             </h4>
             <div className='text-xs text-muted-foreground mb-1'>
               <Link href={res.doc_id}>{res.doc_id}</Link>
+              Score: {res.score}
             </div>
           </div>
         ))}
