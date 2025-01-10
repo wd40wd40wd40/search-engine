@@ -11,7 +11,8 @@ app = FastAPI()
 
 index_data: Dict[str, Any] = {
     "tokens": {},
-    "titles": {}
+    "titles": {},
+    "descriptions": {}
 }
 
 # Handle CORS
@@ -59,6 +60,7 @@ def search(q: str):
     
     tokens_dict = index_data.get("tokens", {})
     titles_dict = index_data.get("titles", {})
+    descriptions_dict = index_data.get("descriptions", {})
 
     token = q.lower()
     if token not in tokens_dict:
@@ -70,10 +72,12 @@ def search(q: str):
 
     for doc_id, score in postings.items():
         title = titles_dict.get(doc_id, "(No title)")
+        description = descriptions_dict.get(doc_id, "(No description)")
         results.append({
             "doc_id": doc_id,
             "title": title,
-            "score": score
+            "score": score,
+            "description": description
         })
 
     return {"results": results}
