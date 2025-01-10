@@ -35,8 +35,6 @@ class Parser:
 
         if meta_description and 'content' in meta_description.attrs:
             description = meta_description['content']
-        else:
-            description = "No Description"
 
         # Return all 4 so you have the full page text for indexing
         return title, text, links, description

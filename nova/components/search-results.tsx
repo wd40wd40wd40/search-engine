@@ -9,6 +9,7 @@ interface APISearchResult {
   doc_id: string;
   score: number;
   title: string;
+  description: string;
 }
 
 export function SearchResults({ query }: SearchResultsProps) {
@@ -71,16 +72,20 @@ export function SearchResults({ query }: SearchResultsProps) {
       <div className='space-y-6'>
         {results.map((res, index) => (
           <div key={index} className='max-w-2xl'>
-            {/* TESTING */}
             <h2 className='text-lg font-medium text-primary mb-1 hover:underline'>
-              <Link href={res.doc_id} className='visited:text-violet-900' target='_blank'>{res.title}</Link>
+              <Link
+                href={res.doc_id}
+                className='visited:text-violet-900'
+                target='_blank'
+              >
+                {res.title}
+              </Link>
             </h2>
-            {/* TESTING */}
             <h4 className='text-lg font-medium text-primary mb-1'>
               Score: {res.score}
             </h4>
             <div className='text-xs text-muted-foreground mb-1'>
-              <Link href={res.doc_id}>{res.doc_id}</Link>
+              <p>{res.description}</p>
               Score: {res.score}
             </div>
           </div>
