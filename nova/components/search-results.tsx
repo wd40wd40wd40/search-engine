@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { CustomPagination } from './pagination'
 
 interface SearchResultsProps {
   query: string;
@@ -11,12 +12,26 @@ interface APISearchResult {
   title: string;
 }
 
+const RESULTS_PER_PAGE = 25
+
 export function SearchResults({ query }: SearchResultsProps) {
-  const [results, setResults] = useState<APISearchResult[]>([]);
+  const [allResults, setResults] = useState<APISearchResult[]>([]);
+  const [currentPage, setCurrentPage] = useState(1)
 
   // For loading, will update later
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const totalPages = Math.ceil(allResults.length / RESULTS_PER_PAGE)
+  const startIndex = (currentPage - 1) * RESULTS_PER_PAGE
+  const endIndex = startIndex + RESULTS_PER_PAGE
+  const currentResults = allResults.slice(startIndex, endIndex)
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage)
+    // Scroll to top of results when page changes
+    window.scrollTo(0, 0)
+  }
 
   useEffect(() => {
     if (!query) return;
@@ -66,10 +81,10 @@ export function SearchResults({ query }: SearchResultsProps) {
   return (
     <div className='container mx-40 py-6 display-flex transition-all duration-300'>
       <p className='text-sm text-muted-foreground mb-4'>
-        Found {results.length} results for &quot;{query}&quot;:
+        Found {allResults.length} results for &quot;{query}&quot;:
       </p>
       <div className='space-y-6'>
-        {results.map((res, index) => (
+        {currentResults.map((res, index) => (
           <div key={index} className='max-w-2xl'>
             {/* TESTING */}
             <h2 className='text-lg font-medium text-primary mb-1 hover:underline'>
@@ -85,6 +100,13 @@ export function SearchResults({ query }: SearchResultsProps) {
             </div>
           </div>
         ))}
+      </div>
+      <div className="mt-8">
+        <CustomPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );
