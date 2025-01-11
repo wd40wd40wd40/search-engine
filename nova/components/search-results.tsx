@@ -79,28 +79,30 @@ export function SearchResults({ query }: SearchResultsProps) {
   }
 
   return (
-    <div className='container mx-40 py-6 display-flex transition-all duration-300'>
-      <p className='text-sm text-muted-foreground mb-4'>
-        Found {allResults.length} results for &quot;{query}&quot;:
-      </p>
-      <div className='space-y-6'>
-        {currentResults.map((res, index) => (
-          <div key={index} className='max-w-2xl'>
-            {/* TESTING */}
-            <h2 className='text-lg font-medium text-primary mb-1 hover:underline'>
-              <Link href={res.doc_id} className='visited:text-violet-900' target='_blank'>{res.title}</Link>
-            </h2>
-            <h4 className='text-lg font-medium text-primary mb-1'>
-              Score: {res.score}
-            </h4>
-            <div className='text-xs text-muted-foreground mb-1'>
-              <Link href={res.doc_id}>{res.doc_id}</Link>
-              Score: {res.score}
+    <div className='flex flex-col min-h-[calc(100vh-80px)] container mx-40 py-6 transition-all duration-500'>
+      <div className='flex-grow'>
+        <p className='text-sm text-muted-foreground mb-4'>
+          Found {allResults.length} results for &quot;{query}&quot;:
+        </p>
+        <div className='space-y-6'>
+          {currentResults.map((res, index) => (
+            <div key={index} className='max-w-2xl'>
+              {/* TESTING */}
+              <h2 className='text-lg font-medium text-primary mb-1 hover:underline'>
+                <Link href={res.doc_id} className='visited:text-violet-900' target='_blank'>{res.title}</Link>
+              </h2>
+              <h4 className='text-lg font-medium text-primary mb-1'>
+                Score: {res.score}
+              </h4>
+              <div className='text-xs text-muted-foreground mb-1'>
+                <Link href={res.doc_id}>{res.doc_id}</Link>
+                Score: {res.score}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-      <div className="mt-8">
+      <div className="mt-auto pt-8 pr-20">
         <CustomPagination
           currentPage={currentPage}
           totalPages={totalPages}
