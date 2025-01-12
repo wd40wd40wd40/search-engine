@@ -27,7 +27,7 @@ export function PrimarySearchForm({
           <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4' />
           <Input
             type='text'
-            placeholder='Search or type a URL'
+            placeholder='Search'
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className='pl-10 pr-4 py-6 rounded-full bg-background/80 placeholder:text-muted-foreground'

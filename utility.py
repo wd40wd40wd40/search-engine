@@ -1,5 +1,4 @@
 # Helper function to make snippet highlights
-
 def snippet_highlighter(full_text: str, query: str, snippet_length: int = 30) -> str:
     words = full_text.split()
     query_lower = query.lower()

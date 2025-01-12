@@ -109,13 +109,13 @@ class Crawler:
         self.page_count += 1
 
         # Parse
-        title, text, links, description = self.parser.parse(html, url)
+        title, text, links = self.parser.parse(html, url)
 
         # Index
         combined_text = (title + " " + text).strip()
         self.indexer.add_document(url, combined_text)
         self.indexer.set_document_title(url, title)
-        self.indexer.set_document_description(url, description)
+        self.indexer.set_document_full_text(url, combined_text)
 
         # Only print progress every 50 pages
         if self.page_count % 50 == 0:

@@ -5,6 +5,8 @@ from typing import Dict, Any
 import asyncio
 from pydantic import BaseModel
 
+from utility import snippet_highlighter
+
 from crawler.crawler import Crawler
 
 app = FastAPI()
@@ -12,7 +14,7 @@ app = FastAPI()
 index_data: Dict[str, Any] = {
     "tokens": {},
     "titles": {},
-    "descriptions": {}
+    "full_texts": {}
 }
 
 # Handle CORS
@@ -60,7 +62,7 @@ def search(q: str):
     
     tokens_dict = index_data.get("tokens", {})
     titles_dict = index_data.get("titles", {})
-    descriptions_dict = index_data.get("descriptions", {})
+    full_texts_dict = index_data.get("full_texts", {})
 
     token = q.lower()
     if token not in tokens_dict:
@@ -72,12 +74,13 @@ def search(q: str):
 
     for doc_id, score in postings.items():
         title = titles_dict.get(doc_id, "(No title)")
-        description = descriptions_dict.get(doc_id, "(No description)")
+        full_text = full_texts_dict.get(doc_id, "")
+        snippet_html = snippet_highlighter(full_text, q, snippet_length=30)
         results.append({
             "doc_id": doc_id,
             "title": title,
             "score": score,
-            "description": description
+            "snippet": snippet_html
         })
 
     return {"results": results}

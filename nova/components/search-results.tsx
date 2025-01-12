@@ -9,7 +9,7 @@ interface APISearchResult {
   doc_id: string;
   score: number;
   title: string;
-  description: string;
+  snippet: string;
 }
 
 export function SearchResults({ query }: SearchResultsProps) {
@@ -84,9 +84,12 @@ export function SearchResults({ query }: SearchResultsProps) {
             <h4 className='text-lg font-medium text-primary mb-1'>
               Score: {res.score}
             </h4>
+            <div
+              className='text-xs text-muted-foreground mb-1'
+              dangerouslySetInnerHTML={{ __html: res.snippet }}
+            />
             <div className='text-xs text-muted-foreground mb-1'>
-              <p>{res.description}</p>
-              Score: {res.score}
+              {res.score}
             </div>
           </div>
         ))}

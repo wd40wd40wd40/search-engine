@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 
+
 class Parser:
     """
     Extracts the page title, main text, and outgoing links from HTML.
@@ -12,9 +13,6 @@ class Parser:
 
         # Title or fallback
         title = soup.title.get_text(strip=True) if soup.title else "No Title"
-
-        # description
-        meta_description = soup.find('meta', attrs={'name': 'description'})
 
         # Remove <script> and <style> tags so they don’t clutter the text
         for script_or_style in soup(["script", "style"]):
@@ -33,8 +31,5 @@ class Parser:
             normalized_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path.rstrip('/')}"
             links.add(normalized_url)
 
-        if meta_description and 'content' in meta_description.attrs:
-            description = meta_description['content']
-
-        # Return all 4 so you have the full page text for indexing
-        return title, text, links, description
+        # Return all 3 so for full page text for indexing
+        return title, text, links
