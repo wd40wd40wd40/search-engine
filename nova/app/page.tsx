@@ -186,9 +186,9 @@ export default function Home() {
         </div>
         <div className='fixed top-4 right-4'>
           <Button
-            variant='ghost'
+            variant='outline'
             size='icon'
-            className='rounded-full bg-background/80 backdrop-blur-sm'
+            //className='rounded-full bg-background/80 backdrop-blur-sm'
           >
             <UserCircle className='h-5 w-5' />
             <span className='sr-only'>Sign in</span>
@@ -197,10 +197,10 @@ export default function Home() {
 
         <div className='fixed bottom-4 right-4'>
           <Button
-            variant='ghost'
+            variant='outline'
             size='icon'
             onClick={() => setCustomizeOpen(true)}
-            className='rounded-full bg-background/80 backdrop-blur-sm transition-all duration-500'
+            //className='rounded-full bg-background/80 backdrop-blur-sm transition-all duration-500'
           >
             <Paintbrush className='h-5 w-5' />
             <span className='sr-only'>Customize</span>
