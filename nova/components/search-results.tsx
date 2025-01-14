@@ -88,7 +88,6 @@ export function SearchResults({ query }: SearchResultsProps) {
         <div className='space-y-6'>
           {currentResults.map((res, index) => (
             <div key={index} className='max-w-2xl'>
-              {/* TESTING */}
               <h2 className='text-lg font-medium text-primary mb-1 hover:underline'>
                 <Link
                   href={res.doc_id}
@@ -105,6 +104,10 @@ export function SearchResults({ query }: SearchResultsProps) {
                 <Link href={res.doc_id}>{res.doc_id}</Link>
                 Score: {res.score}
               </div>
+              <div
+                className='text-xs text-muted-foreground mb-1'
+                dangerouslySetInnerHTML={{ __html: res.snippet }}
+              />
             </div>
           ))}
         </div>
