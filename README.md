@@ -58,3 +58,8 @@ Design Choices:
 5. Crawler only keeps the urls and not the content for indexer to then go over. Results in fetching 2x for
    everything, but maintains freshness since indexing operates on its own. Also, substantially less storage
    consumption. We're broke students, we can't fund that currently.
+
+## How to run
+1. Clone repo
+2. Run `setup.sh`
+3. Start the project with `npm run dev` in one terminal and `python -m uvicorn api:app --reload` in another terminal
