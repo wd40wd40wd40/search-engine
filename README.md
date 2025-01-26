@@ -1,4 +1,4 @@
-# search-engine
+# NOVA Search Engine
 
 ### Important concepts:
 
@@ -71,5 +71,7 @@ Design Choices:
 ## How to Run
 
 1. Clone repo
-2. Run `pip install -r requirements.txt` to install needed packages (Note: It is highly recommended to do this in a virtual environment)
-3. IP
+2. `cd` into the `backend` folder and run `pip install -r requirements.txt` to install needed python packages (Note: It is highly recommended to do this in a virtual environment)
+3. Run `python -m uvicorn api:app --reload`
+4. In a new terminal, `cd` into the `nova` folder and run `npm install` to install needed node packages
+5. Run `npm run dev`
