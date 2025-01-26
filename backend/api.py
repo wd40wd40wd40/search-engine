@@ -53,7 +53,7 @@ async def crawl_endpoint(data: CrawlRequest):
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to my FastAPI. Try /search?q=<query>!"}
+    return {"message": "You shouldn't be here..."}
 
 @app.get("/search")
 def search(q: str):
