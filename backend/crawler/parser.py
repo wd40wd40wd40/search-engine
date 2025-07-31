@@ -9,7 +9,7 @@ class Parser:
     """
 
     def parse(self, html, base_url):
-        soup = BeautifulSoup(html, "lxml")
+        soup = BeautifulSoup(html, "html.parser")
 
         # Title or fallback
         title = soup.title.get_text(strip=True) if soup.title else "No Title"

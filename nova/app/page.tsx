@@ -71,7 +71,7 @@ export default function Home() {
 
     if (trimmedSearch && trimmedSourceURL) {
       setIsCrawling(true);
-      try {
+      try {                           
         const crawlRes = await fetch("http://127.0.0.1:8000/crawl", {
           method: "POST",
           headers: { "Content-Type": "application/json" },

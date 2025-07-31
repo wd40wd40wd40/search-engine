@@ -1,3 +1,8 @@
+import os
+import certifi
+os.environ['SSL_CERT_FILE'] = certifi.where()
+
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json

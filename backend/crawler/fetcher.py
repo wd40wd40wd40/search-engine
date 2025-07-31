@@ -1,6 +1,8 @@
 import aiohttp
 import asyncio
 import logging
+import certifi
+import ssl
 
 logging.basicConfig(level=logging.INFO)
 
@@ -27,7 +29,11 @@ class Fetcher:
         ]
 
     async def create_session(self):
-        return aiohttp.ClientSession(timeout=self.timeout)
+        ssl_context = ssl.create_default_context(cafile=certifi.where())
+        return aiohttp.ClientSession(
+                timeout=self.timeout, 
+                connector=aiohttp.TCPConnector(ssl=ssl_context)
+        )
 
     async def fetch(self, session, url: str):
         # Quick check: skip known binary resources

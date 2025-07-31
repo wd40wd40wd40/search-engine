@@ -2,6 +2,8 @@ import asyncio
 import time
 from urllib.parse import urlparse
 import aiohttp
+import ssl
+import certifi
 
 from crawler.fetcher import Fetcher
 from crawler.parser import Parser
@@ -18,6 +20,7 @@ class Crawler:
         self.start_url = start_url
         self.max_pages = max_pages
         self.max_depth = max_depth
+        self.ssl_context = ssl.create_default_context(cafile=certifi.where())
 
         self.visited = set()
         self.queue = [(start_url, 0)]
@@ -42,7 +45,7 @@ class Crawler:
         """
         self.overall_start = time.perf_counter()
 
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=self.ssl_context)) as session:
             # BFS-like loop with concurrency
             while self.queue and len(self.visited) < self.max_pages:
                 # We'll gather a batch of up to 20

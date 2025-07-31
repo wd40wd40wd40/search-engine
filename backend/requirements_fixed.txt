@@ -1,0 +1,8 @@
+aiohttp
+beautifulsoup4
+fastapi
+uvicorn
+bs4
+numpy>=2.0.0,<2.1.0
+spacy>=3.7.0
+# Add other essential packages without strict version pins
